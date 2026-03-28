@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/robert/Downloads/**)",
+      "Bash(python3 -c \":*)",
+      "Bash(pip3 install:*)",
+      "Bash(python3 -m pip install pandas openpyxl)",
+      "Bash(python3 -c \"import openpyxl; print\\(''openpyxl ok''\\)\")",
+      "Bash(python3:*)"
+    ]
+  }
+}
