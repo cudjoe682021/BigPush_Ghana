@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Know Your Roads — Ghana Big Push Road Tracker</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 <style>
   :root {
     --red: #CE1126;
@@ -117,6 +118,43 @@
   footer { background: var(--green); color: rgba(255,255,255,.8); text-align: center; padding: 24px; font-size: 13px; margin-top: 32px; }
   footer strong { color: var(--gold); }
 
+  /* VIEW TOGGLE */
+  .view-toggle { display:flex; gap:8px; margin-bottom:14px; }
+  .view-btn { padding:7px 18px; border:1.5px solid var(--green); border-radius:6px; background:#fff; color:var(--green); font-weight:700; font-size:13px; cursor:pointer; transition:all .15s; }
+  .view-btn.active { background:var(--green); color:#fff; }
+
+  /* CARD GRID */
+  .card-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; }
+  .road-card { background:#fff; border-radius:12px; padding:18px; box-shadow:0 2px 10px rgba(0,0,0,.08); border-top:4px solid var(--green); display:flex; flex-direction:column; gap:10px; }
+  .road-card.mrh-card { border-top-color:#d4a800; }
+  .card-road-name { font-weight:700; font-size:14px; line-height:1.4; color:var(--text); }
+  .card-meta { display:flex; flex-wrap:wrap; gap:6px; font-size:12px; }
+  .card-dates { display:grid; grid-template-columns:1fr 1fr; gap:8px; background:#f5f5f0; border-radius:8px; padding:10px; font-size:12px; }
+  .card-date-label { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.4px; }
+  .card-date-val { font-weight:700; color:var(--text); margin-top:2px; }
+  .card-actions { display:flex; gap:6px; flex-wrap:wrap; margin-top:4px; }
+  .card-btn { padding:6px 10px; border:none; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; }
+  .card-btn-share { background:var(--green); color:#fff; }
+  .card-btn-seen  { background:#fef3c7; color:#92400e; border:1px solid #fcd34d; }
+  .card-btn-qr    { background:#ede9fe; color:#6d28d9; border:1px solid #c4b5fd; }
+  .card-btn-cmts  { background:#e0f2fe; color:#075985; border:1px solid #7dd3fc; }
+  .card-contractor { font-size:12px; color:#333; }
+
+  /* GANTT */
+  .gantt-wrap { overflow-x:auto; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,.07); background:#fff; padding:16px; }
+  .gantt-controls { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px; align-items:center; }
+
+  /* CONTACTS */
+  .contacts-tabs { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+  .ctab { padding:7px 16px; border:1.5px solid var(--border); border-radius:6px; background:#fff; font-size:13px; font-weight:600; cursor:pointer; color:var(--muted); }
+  .ctab.active { border-color:var(--green); color:var(--green); background:#e8f5ee; }
+  .contacts-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:14px; }
+  .contact-card { background:#fff; border-radius:10px; padding:16px; box-shadow:0 2px 8px rgba(0,0,0,.07); border-left:4px solid var(--green); }
+  .contact-card.mp-card { border-left-color:#d4a800; }
+  .contact-name { font-weight:700; font-size:14px; margin-bottom:4px; }
+  .contact-role { font-size:12px; color:var(--muted); margin-bottom:8px; }
+  .contact-detail { font-size:12px; color:#333; margin-top:3px; display:flex; align-items:flex-start; gap:6px; }
+
   @media (max-width: 600px) {
     .nav-links { display: none; }
     .hero h1 { font-size: 22px; }
@@ -124,7 +162,58 @@
     .stat-value { font-size: 20px; }
     section { padding: 0 14px 24px; }
     .alert-banner { margin: 0 14px 14px; }
+    .card-grid { grid-template-columns: 1fr; }
+    .contacts-grid { grid-template-columns: 1fr; }
   }
+
+  /* ── MODALS ── */
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:1000; align-items:center; justify-content:center; padding:16px; }
+  .modal-overlay.open { display:flex; }
+  .modal-box { background:#fff; border-radius:14px; width:100%; max-width:520px; max-height:90vh; overflow-y:auto; box-shadow:0 8px 40px rgba(0,0,0,.25); }
+  .modal-header { background:var(--green); color:#fff; padding:18px 20px; border-radius:14px 14px 0 0; display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+  .modal-header h2 { font-size:15px; font-weight:700; line-height:1.4; margin:0; }
+  .modal-close { background:none; border:none; color:#fff; font-size:22px; cursor:pointer; flex-shrink:0; line-height:1; padding:0; }
+  .modal-body { padding:20px; }
+
+  /* Status picker */
+  .status-btns { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin:16px 0; }
+  .status-btn { border:2px solid var(--border); background:#fff; border-radius:10px; padding:16px 8px; cursor:pointer; text-align:center; font-size:13px; font-weight:600; transition:all .15s; }
+  .status-btn:hover { border-color:var(--green); background:#f0f8f4; }
+  .status-btn.active-btn { border-color:var(--green); background:#e8f5ee; }
+  .status-btn .s-icon { font-size:28px; display:block; margin-bottom:6px; }
+  .status-counts { display:flex; gap:8px; flex-wrap:wrap; margin-top:4px; }
+  .s-count { font-size:11px; font-weight:700; padding:2px 7px; border-radius:10px; white-space:nowrap; }
+  .s-count.wip { background:#fef3c7; color:#92400e; }
+  .s-count.nw  { background:#fee2e2; color:#991b1b; }
+  .s-count.done{ background:#d1fae5; color:#065f46; }
+
+  /* Comment thread */
+  .comment-thread { display:flex; flex-direction:column; gap:12px; margin-bottom:16px; max-height:300px; overflow-y:auto; }
+  .comment-card { background:#f5f5f0; border-radius:8px; padding:12px 14px; font-size:13px; }
+  .comment-meta { font-size:11px; color:var(--muted); margin-bottom:4px; }
+  .comment-status-badge { display:inline-block; font-size:10px; font-weight:700; padding:1px 7px; border-radius:8px; margin-left:6px; vertical-align:middle; }
+  .comment-form input, .comment-form textarea, .comment-form select { width:100%; border:1px solid var(--border); border-radius:6px; padding:9px 12px; font-size:13px; margin-bottom:10px; font-family:inherit; box-sizing:border-box; }
+  .comment-form textarea { min-height:80px; resize:vertical; }
+  .btn-submit { background:var(--green); color:#fff; border:none; border-radius:8px; padding:11px 20px; font-size:14px; font-weight:700; cursor:pointer; width:100%; }
+  .btn-submit:hover { background:#005530; }
+
+  /* QR modal */
+  .qr-wrap { text-align:center; padding:16px 0; }
+  .qr-wrap canvas { border:8px solid #fff; box-shadow:0 2px 12px rgba(0,0,0,.12); border-radius:4px; }
+  .qr-road-name { font-weight:700; font-size:14px; margin:14px 0 4px; color:var(--green); }
+  .qr-region { font-size:12px; color:var(--muted); margin-bottom:16px; }
+  .btn-print { background:var(--gold); color:#000; border:none; border-radius:8px; padding:11px 24px; font-size:14px; font-weight:700; cursor:pointer; margin-right:8px; }
+  .btn-print:hover { background:#e6bb00; }
+  .btn-download { background:#e8f5ee; color:var(--green); border:2px solid var(--green); border-radius:8px; padding:10px 24px; font-size:14px; font-weight:700; cursor:pointer; }
+  .btn-download:hover { background:#d1fae5; }
+
+  /* Action buttons in table */
+  .action-btn { display:block; width:100%; border:none; border-radius:6px; padding:5px 8px; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap; margin-bottom:3px; text-align:center; }
+  .action-btn.share { background:var(--green); color:#fff; }
+  .action-btn.seen  { background:#fef3c7; color:#92400e; }
+  .action-btn.qr    { background:#e8eef8; color:#1e40af; }
+  .action-btn.cmts  { background:#f3e8ff; color:#6d28d9; }
+  .action-btn:hover { opacity:.85; }
 </style>
 </head>
 <body>
@@ -137,7 +226,9 @@
   <div class="nav-links">
     <a href="#overview">Overview</a>
     <a href="#charts">By Region</a>
+    <a href="#timeline">Timeline</a>
     <a href="#contracts">Road Projects</a>
+    <a href="#contacts">Contacts</a>
     <a href="#about">Learn More</a>
   </div>
 </nav>
@@ -255,6 +346,21 @@
   </div>
 </section>
 
+<!-- GANTT TIMELINE -->
+<section id="timeline">
+  <div class="section-title">📅 Project Timeline — Award to Completion</div>
+  <div style="font-size:13px;color:var(--muted);margin-bottom:12px;">Each bar shows a road's journey from contract award date to estimated completion. Filter by region or work type. Colours = work type. Est. completion dates based on contract type & value.</div>
+  <div class="gantt-controls">
+    <select id="ganttRegion" class="filter-sel"><option value="">All Regions</option></select>
+    <select id="ganttWork" class="filter-sel"><option value="">All Work Types</option></select>
+    <span style="font-size:12px;color:var(--muted);" id="ganttCount"></span>
+  </div>
+  <div class="gantt-wrap">
+    <canvas id="ganttChart"></canvas>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;font-size:12px;" id="ganttLegend"></div>
+</section>
+
 <!-- FLAGSHIP PROJECTS -->
 <section>
   <div class="section-title">🛣️ Key Flagship Projects (Programme-Wide)</div>
@@ -297,9 +403,9 @@
       <div class="flag-desc">Large-scale flagship projects such as ring roads, dualisations, and bridge construction that will serve millions of Ghanaians.</div>
     </div>
     <div class="flag-card fc-blue" id="multiCard">
-      <h3>🤝 Local Contractors</h3>
+      <h3>🤝 Ghanaian Firms</h3>
       <div class="flag-num" style="color:#2563eb" id="multiNum">—</div>
-      <div class="flag-desc">Ghanaian-owned companies awarded road contracts. The programme prioritises local firms to keep investment in Ghana and build local capacity.</div>
+      <div class="flag-desc">Ghanaian-owned companies awarded contracts — including First Sky, Kofi Job, Maripoma, Rango, Rolider, Mawums, Oswal, and more. 6 international firms (5 Chinese, 1 Egyptian) are also involved.</div>
     </div>
     <div class="flag-card" style="border-top-color:var(--green);" id="usdCard">
       <h3>🌍 International Projects</h3>
@@ -317,6 +423,10 @@
     <span style="font-weight:700;color:var(--muted);">Data sources:</span>
     <span style="background:#d1fae5;color:#065f46;font-weight:700;padding:4px 12px;border-radius:20px;">✅ RTI Confirmed — 81 contracts with full details (contractor, value, date)</span>
     <span style="background:#fff3cd;color:#856404;font-weight:700;padding:4px 12px;border-radius:20px;">📋 MRH Official List — 10 roads authorized but contract details not yet public</span>
+  </div>
+  <div class="view-toggle">
+    <button class="view-btn active" id="tableViewBtn" onclick="setView('table')">📋 Table</button>
+    <button class="view-btn" id="cardViewBtn" onclick="setView('cards')">🃏 Cards</button>
   </div>
   <div class="table-controls">
     <input type="text" class="search-box" id="searchBox" placeholder="Search by road name, town, region, or contractor…">
@@ -346,9 +456,20 @@
       <tbody id="tableBody"></tbody>
     </table>
   </div>
-  <div class="pagination" id="pagination">
-    <span class="page-info" id="pageInfo"></span>
+  <div class="pagination" id="pagination"></div>
+  <div class="card-grid" id="cardGrid" style="display:none;"></div>
+</section>
+
+<!-- CONTACTS -->
+<section id="contacts">
+  <div class="section-title">📞 Contact Directory</div>
+  <div style="font-size:13px;color:var(--muted);margin-bottom:14px;">Find the right office to report a road issue, request information, or contact your MP on the Roads & Transport Committee.</div>
+  <div class="contacts-tabs">
+    <button class="ctab active" onclick="showContacts('gha')">🏛️ GHA Regional Offices</button>
+    <button class="ctab" onclick="showContacts('mrh')">🏢 Ministry & Agencies</button>
+    <button class="ctab" onclick="showContacts('mps')">🧑‍💼 Roads & Transport MPs</button>
   </div>
+  <div class="contacts-grid" id="contactsGrid"></div>
 </section>
 
 <!-- ABOUT -->
@@ -433,9 +554,35 @@ contracts.forEach(c => {
   if (c.flags.includes('Multi-contract')) multiCount++;
   if (c.flags.includes('USD')) usdCount++;
 });
+// ─── CONTRACTOR NATIONALITY ────────────────────────────────────
+// Verified foreign contractors (state-owned or international HQ outside Ghana)
+const FOREIGN_CONTRACTORS = new Set([
+  'ARAB CONTRACTORS GHANA LIMITED',              // Egyptian — Osman Ahmed Osman & Co.
+  'M/S POLY CHANGDA OVERSEAS ENG. CO. LTD',     // Chinese
+  'SINOHYDRO CORPORATION LIMITED',               // Chinese — PowerChina subsidiary
+  'M/S CHINA RAILWAY NO.5 ENGINEERING GHANA LTD', // Chinese — CR5 Group
+  'CHINA RAILWAY NO.5 ENGINEERING (GH) LIMITED', // Chinese — CR5 Group
+  'CHINA JIANGXI INT. ECONOMIC & TECH. COOPERATION CO. LTD', // Chinese SOE
+]);
+
+function isGhanaian(contractorName) {
+  if (!contractorName || contractorName === 'Pending Disclosure') return null;
+  return !FOREIGN_CONTRACTORS.has(contractorName.trim().toUpperCase());
+}
+
+function contractorBadge(contractorName) {
+  const gh = isGhanaian(contractorName);
+  if (gh === null) return '';
+  return gh
+    ? '<span style="display:inline-block;background:#d1fae5;color:#065f46;font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px;margin-top:2px;">🇬🇭 Ghanaian</span>'
+    : '<span style="display:inline-block;background:#e0e7ff;color:#3730a3;font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px;margin-top:2px;">🌍 International</span>';
+}
+
+const ghanaianFirmCount = contractors.filter(c => isGhanaian(c.name)).length;
+
 document.getElementById('dupNum').textContent = multiLotRoads.size + ' roads';
 document.getElementById('highValNum').textContent = highValCount;
-document.getElementById('multiNum').textContent = contractors.filter(c => c.num_contracts > 1).length + ' firms';
+document.getElementById('multiNum').textContent = ghanaianFirmCount + ' of ' + contractors.length + ' firms';
 document.getElementById('usdNum').textContent = usdCount;
 
 // ─── POPULATE FILTERS ──────────────────────────────────────────
@@ -446,7 +593,20 @@ function populateSelect(id, values) {
   });
 }
 populateSelect('regionFilter', contracts.map(c => c.region));
-populateSelect('contractorFilter', contracts.filter(c => c.contractor && c.contractor !== 'Pending Disclosure').map(c => c.contractor));
+// Populate contractor dropdown with nationality prefix
+(function() {
+  const sel = document.getElementById('contractorFilter');
+  const names = [...new Set(
+    contracts.filter(c => c.contractor && c.contractor !== 'Pending Disclosure').map(c => c.contractor)
+  )].sort();
+  names.forEach(name => {
+    const o = document.createElement('option');
+    o.value = name;
+    const gh = isGhanaian(name);
+    o.textContent = (gh === true ? '🇬🇭 ' : gh === false ? '🌍 ' : '') + name.replace('M/S ','').replace('MESSRS ','');
+    sel.appendChild(o);
+  });
+})();
 populateSelect('workFilter', contracts.map(c => c.work_type));
 populateSelect('agencyFilter', contracts.map(c => c.agency));
 
@@ -622,20 +782,37 @@ function render() {
       <td>
         <div class="proj-name">${c.name}</div>
         <div style="margin-top:3px;">${sourceBadge(c)}</div>
+        <div id="counts-${c.id}">${buildCountsHtml(getReports(c.id))}</div>
       </td>
       <td><span class="region-pill">${c.region||'—'}</span></td>
       <td><span class="type-pill">${c.work_type||'—'}</span></td>
-      <td style="font-size:12px;max-width:180px;">${c.source==='MRH Official List'?'<span style="color:#aaa;font-size:11px;">Pending disclosure</span>':c.contractor}</td>
+      <td style="font-size:12px;max-width:180px;">
+        ${c.source==='MRH Official List'
+          ? '<span style="color:#aaa;font-size:11px;">Pending disclosure</span>'
+          : `<div>${c.contractor}</div><div>${contractorBadge(c.contractor)}</div>`}
+      </td>
       <td class="amount-cell">${fmt(c)}</td>
       <td style="font-size:11px;white-space:nowrap;">${agencyShort(c.agency)}</td>
       <td style="font-size:12px;white-space:nowrap;">${c.date}</td>
       <td style="text-align:center;">${estCompletion(c)}</td>
-      <td><button onclick="shareProject(${c.id})" style="background:var(--green);color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">📤 Share</button><div class="flag-chips" style="margin-top:4px;">${chipHtml(c.flags)}</div></td>
+      <td style="min-width:96px;">
+        <button class="action-btn share" onclick="shareProject(${c.id})">📤 Share</button>
+        <button class="action-btn seen"  onclick="showStatusModal(${c.id})">👁️ I Saw This</button>
+        <button class="action-btn qr"    onclick="showQRModal(${c.id})">📱 QR Code</button>
+        <button class="action-btn cmts"  onclick="showCommentsModal(${c.id})">💬 <span id="cbadge-${c.id}" style="display:none;"></span>Comments</button>
+        <div class="flag-chips" style="margin-top:4px;">${chipHtml(c.flags)}</div>
+      </td>
     </tr>`).join('');
   const rti = filtered.filter(c=>c.source==='RTI Data').length;
   const mrh = filtered.filter(c=>c.source!=='RTI Data').length;
   document.getElementById('resultCount').textContent = `${filtered.length} road projects (${rti} confirmed + ${mrh} MRH official)`;
   renderPagination();
+  // Restore comment badges after render
+  filtered.slice((page-1)*perPage, page*perPage).forEach(c => {
+    const n = getComments(c.id).length;
+    const badge = document.getElementById('cbadge-' + c.id);
+    if (badge && n > 0) { badge.textContent = '💬 ' + n + ' '; badge.style.display = 'inline'; }
+  });
 }
 
 function renderPagination() {
@@ -699,7 +876,534 @@ document.querySelectorAll('thead th[data-col]').forEach(th => {
   });
 });
 
+// ══════════════════════════════════════════════════════════
+// STORAGE HELPERS (needed by render() before second script loads)
+// ══════════════════════════════════════════════════════════
+function getReports(id) {
+  return JSON.parse(localStorage.getItem('gh_reports_' + id) || '{"wip":0,"nw":0,"done":0,"myVote":null}');
+}
+function saveReports(id, data) {
+  localStorage.setItem('gh_reports_' + id, JSON.stringify(data));
+}
+function getComments(id) {
+  return JSON.parse(localStorage.getItem('gh_comments_' + id) || '[]');
+}
+function buildCountsHtml(r) {
+  const total = r.wip + r.nw + r.done;
+  if (!total) return '';
+  let html = '<div class="status-counts">';
+  if (r.wip)  html += `<span class="s-count wip">🚧 ${r.wip}</span>`;
+  if (r.nw)   html += `<span class="s-count nw">⏳ ${r.nw}</span>`;
+  if (r.done) html += `<span class="s-count done">✅ ${r.done}</span>`;
+  html += '</div>';
+  return html;
+}
+
 applyFilters();
+
+// ═══════════════════════════════════════════════════════════
+// CARD VIEW TOGGLE
+// ═══════════════════════════════════════════════════════════
+let currentView = 'table';
+window.setView = function(v) {
+  currentView = v;
+  document.getElementById('tableViewBtn').classList.toggle('active', v === 'table');
+  document.getElementById('cardViewBtn').classList.toggle('active', v === 'cards');
+  document.querySelector('.table-wrap').style.display = v === 'table' ? '' : 'none';
+  document.getElementById('pagination').style.display = v === 'table' ? '' : 'none';
+  document.getElementById('cardGrid').style.display = v === 'cards' ? '' : 'none';
+  if (v === 'cards') renderCards();
+};
+
+function renderCards() {
+  const grid = document.getElementById('cardGrid');
+  grid.innerHTML = filtered.map(c => {
+    const compEl = document.createElement('div');
+    compEl.innerHTML = estCompletion(c);
+    const compTxt = compEl.textContent.replace('est.','').trim() || 'TBC';
+    const isMRH = c.source === 'MRH Official List';
+    return `<div class="road-card${isMRH?' mrh-card':''}">
+      <div>
+        <div class="card-road-name">${c.name}</div>
+        <div style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap;">
+          ${sourceBadge(c)}
+          <span class="region-pill">${c.region||'—'}</span>
+          <span class="type-pill">${c.work_type||'—'}</span>
+        </div>
+      </div>
+      <div class="card-contractor">
+        ${isMRH ? '<span style="color:#aaa;">Contractor: Pending disclosure</span>'
+          : `<strong>${c.contractor}</strong><br>${contractorBadge(c.contractor)}`}
+      </div>
+      <div class="card-dates">
+        <div>
+          <div class="card-date-label">Awarded</div>
+          <div class="card-date-val">${c.date}</div>
+        </div>
+        <div>
+          <div class="card-date-label">Est. Completion</div>
+          <div class="card-date-val">${compTxt}</div>
+        </div>
+      </div>
+      <div style="font-size:12px;"><strong>Investment:</strong> ${fmt(c)}</div>
+      <div id="counts-card-${c.id}">${buildCountsHtml(getReports(c.id))}</div>
+      <div class="card-actions">
+        <button class="card-btn card-btn-share" onclick="shareProject(${c.id})">📤 Share</button>
+        <button class="card-btn card-btn-seen"  onclick="showStatusModal(${c.id})">👁️ I Saw This</button>
+        <button class="card-btn card-btn-qr"    onclick="showQRModal(${c.id})">📱 QR</button>
+        <button class="card-btn card-btn-cmts"  onclick="showCommentsModal(${c.id})">💬 <span id="cbadge-card-${c.id}">${getComments(c.id).length > 0 ? getComments(c.id).length + ' ' : ''}</span>Comments</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════
+// GANTT TIMELINE CHART
+// ═══════════════════════════════════════════════════════════
+const WORK_COLORS = {
+  'Rehabilitation':        '#006B3F',
+  'Reconstruction':        '#2563eb',
+  'Upgrading':             '#d97706',
+  'Construction':          '#7c3aed',
+  'Dualisation':           '#0891b2',
+  'Bridge Construction':   '#CE1126',
+  'Rehabilitation/Construction': '#059669',
+  'Rehabilitation/Upgrading':    '#0d9488',
+  'Upgrading/Bridge':      '#dc2626',
+};
+function workColor(wt) { return WORK_COLORS[wt] || '#6b7280'; }
+
+// Populate gantt filters
+(function(){
+  const gr = document.getElementById('ganttRegion');
+  const gw = document.getElementById('ganttWork');
+  [...new Set(contracts.map(c=>c.region))].filter(Boolean).sort().forEach(v=>{
+    gr.innerHTML += `<option value="${v}">${v}</option>`;
+  });
+  [...new Set(contracts.map(c=>c.work_type))].filter(Boolean).sort().forEach(v=>{
+    gw.innerHTML += `<option value="${v}">${v}</option>`;
+  });
+})();
+
+let ganttChart = null;
+function buildGantt() {
+  const region = document.getElementById('ganttRegion').value;
+  const work   = document.getElementById('ganttWork').value;
+  let pool = contracts.filter(c => c.est_completion && c.est_completion < 9e12);
+  if (region) pool = pool.filter(c => c.region === region);
+  if (work)   pool = pool.filter(c => c.work_type === work);
+  pool = pool.sort((a,b) => a.est_completion - b.est_completion).slice(0, 40);
+
+  document.getElementById('ganttCount').textContent =
+    `Showing ${pool.length} of ${contracts.length} roads`;
+
+  const labels = pool.map(c => c.name.replace(/^(REHABILITATION|RECONSTRUCTION|UPGRADING|CONSTRUCTION|DUALISATION|REDEVELOPMENT) OF /,'').substring(0,45));
+  const data   = pool.map(c => {
+    const parts = (c.date||'').split('-');
+    const mMap  = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+    const m = mMap[parts[1]], y = 2000+parseInt(parts[2]||'25');
+    const start = (m !== undefined) ? new Date(y, m, 1).getTime() : new Date(2025,8,1).getTime();
+    return [start, c.est_completion];
+  });
+  const colors = pool.map(c => workColor(c.work_type));
+
+  const h = Math.max(300, pool.length * 26);
+  document.getElementById('ganttChart').style.height = h + 'px';
+
+  if (ganttChart) ganttChart.destroy();
+  ganttChart = new Chart(document.getElementById('ganttChart'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Project duration',
+        data,
+        backgroundColor: colors.map(c => c + 'cc'),
+        borderColor: colors,
+        borderWidth: 1,
+        borderRadius: 3,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            title: (items) => pool[items[0].dataIndex].name,
+            label: (item) => {
+              const [s, e] = item.raw;
+              const fmt = t => new Date(t).toLocaleDateString('en-GB',{month:'short',year:'numeric'});
+              return ` Awarded: ${fmt(s)} → Est. Completion: ${fmt(e)}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          type: 'linear',
+          min: new Date(2025, 7, 1).getTime(),
+          max: new Date(2029, 0, 1).getTime(),
+          ticks: {
+            callback: v => {
+              const d = new Date(v);
+              const q = ['Q1','Q1','Q1','Q2','Q2','Q2','Q3','Q3','Q3','Q4','Q4','Q4'][d.getMonth()];
+              return d.getMonth() % 3 === 0 ? `${q} ${d.getFullYear()}` : '';
+            },
+            maxRotation: 0, font: { size: 10 }
+          },
+          grid: { color: '#e5e7eb' }
+        },
+        y: { ticks: { font: { size: 10 }, color: '#374151' } }
+      }
+    }
+  });
+
+  // Legend
+  const legend = document.getElementById('ganttLegend');
+  const seen = {};
+  pool.forEach(c => { seen[c.work_type] = workColor(c.work_type); });
+  legend.innerHTML = Object.entries(seen).map(([k,v]) =>
+    `<span style="display:flex;align-items:center;gap:5px;"><span style="width:14px;height:14px;border-radius:3px;background:${v};display:inline-block;"></span><span style="color:#374151;">${k}</span></span>`
+  ).join('');
+}
+buildGantt();
+document.getElementById('ganttRegion').addEventListener('change', buildGantt);
+document.getElementById('ganttWork').addEventListener('change', buildGantt);
+
+// ═══════════════════════════════════════════════════════════
+// CONTACT DIRECTORY
+// ═══════════════════════════════════════════════════════════
+const CONTACTS = {
+  gha: [
+    { name:'GHA Head Office', role:'Ghana Highway Authority — National', region:'Greater Accra', phone:'0302-961616 / 0302-961620', address:'Ministries, Accra (GA-107-2101)', email:'info@highways.gov.gh' },
+    { name:'GHA Greater Accra Regional Office', role:'Trunk roads — Greater Accra', region:'Greater Accra', address:'2nd Giffard Lane, Accra', phone:'030-276-1234' },
+    { name:'GHA Ashanti Regional Office', role:'Trunk roads — Ashanti', region:'Ashanti', address:'Kumasi (P.O. Box 1914)', phone:'032-202-2841' },
+    { name:'GHA Central Regional Office', role:'Trunk roads — Central', region:'Central', address:'Cape Coast (P.O. Box 707)', phone:'033-213-3221' },
+    { name:'GHA Eastern Regional Office', role:'Trunk roads — Eastern', region:'Eastern', address:'Koforidua (P.O. Box 633)', phone:'034-202-2071' },
+    { name:'GHA Volta Regional Office', role:'Trunk roads — Volta', region:'Volta', address:'Ho (P.O. Box 271)', phone:'036-202-1500' },
+    { name:'GHA Western Regional Office', role:'Trunk roads — Western', region:'Western', address:'Takoradi', phone:'031-202-3210' },
+    { name:'GHA Western North Regional Office', role:'Trunk roads — Western North', region:'Western North', address:'Sefwi Wiawso (P.O. Box 190)', phone:'Contact GHA Head Office' },
+    { name:'GHA Northern Regional Office', role:'Trunk roads — Northern', region:'Northern', address:'Tamale', phone:'037-202-2580' },
+    { name:'GHA North East Regional Office', role:'Trunk roads — North East', region:'North East', address:'Nalerigu / Gambaga', phone:'Contact GHA Head Office' },
+    { name:'GHA Savannah Regional Office', role:'Trunk roads — Savannah', region:'Savannah', address:'Damongo', phone:'Contact GHA Head Office' },
+    { name:'GHA Upper East Regional Office', role:'Trunk roads — Upper East', region:'Upper East', address:'Bolgatanga', phone:'038-202-2292' },
+    { name:'GHA Upper West Regional Office', role:'Trunk roads — Upper West', region:'Upper West', address:'Wa', phone:'039-292-2120' },
+    { name:'GHA Bono Regional Office', role:'Trunk roads — Bono', region:'Bono', address:'Sunyani', phone:'035-202-7019' },
+    { name:'GHA Bono East Regional Office', role:'Trunk roads — Bono East', region:'Bono East', address:'Techiman', phone:'Contact GHA Head Office' },
+    { name:'GHA Ahafo Regional Office', role:'Trunk roads — Ahafo', region:'Ahafo', address:'Goaso', phone:'Contact GHA Head Office' },
+    { name:'GHA Oti Regional Office', role:'Trunk roads — Oti', region:'Oti', address:'Dambai', phone:'Contact GHA Head Office' },
+  ],
+  mrh: [
+    { name:'Ministry of Roads & Highways', role:'Parent Ministry — Overall programme oversight', phone:'+233 20 011 9979', email:'info@mrh.gov.gh', address:'Accra Ministries', web:'mrh.gov.gh' },
+    { name:'Department of Feeder Roads', role:'Rural feeder roads nationwide', phone:'030-276-1155', address:'Accra', web:'dfr.gov.gh' },
+    { name:'Department of Urban Roads', role:'Urban roads in all 16 regional capitals', phone:'030-277-3290', email:'dur@roads.gov.gh', address:'Accra', web:'dur.gov.gh' },
+    { name:'Public Procurement Authority', role:'Report procurement irregularities', phone:'030-250-2325', email:'info@ppaghana.org', address:'Ministries, Accra', web:'ppaghana.org' },
+    { name:'GHA Hotline (Road Defect Reports)', role:'Report road defects and hazards', phone:'0800-111-789', address:'Toll-free hotline — all regions' },
+  ],
+  mps: [
+    { name:'Hon. Kwame Governs Agbodza', role:'Minister for Roads & Highways', region:'Adaklu Constituency (Volta)', party:'NDC', committee:'Cabinet — Roads & Highways Ministry' },
+    { name:'Roads & Transport Committee (Parliament)', role:'Parliamentary oversight of road projects', phone:'030-296-0813', address:'Parliament House, Accra — contact the Clerk of the Committee', web:'parliament.gh' },
+    { name:'Find Your MP', role:'Contact your constituency MP to report road issues in your area', address:'Visit parliament.gh → Members → search by constituency or region', web:'parliament.gh' },
+    { name:'Minority Spokesperson — Roads', role:'Ranking Member, Roads & Transport Committee', party:'NPP', address:'Parliament House, Accra — contact via Parliament switchboard' },
+  ]
+};
+
+function showContacts(tab) {
+  document.querySelectorAll('.ctab').forEach(b => {
+    b.classList.toggle('active', b.textContent.includes(tab === 'gha' ? 'GHA' : tab === 'mrh' ? 'Ministry' : 'MPs'));
+  });
+  const data = CONTACTS[tab];
+  const grid = document.getElementById('contactsGrid');
+  const isMP = tab === 'mps';
+  grid.innerHTML = data.map(c => `
+    <div class="contact-card${isMP?' mp-card':''}">
+      <div class="contact-name">${c.name}</div>
+      <div class="contact-role">${c.role}</div>
+      ${c.region    ? `<div class="contact-detail"><span>📍</span><span>${c.region}</span></div>` : ''}
+      ${c.address   ? `<div class="contact-detail"><span>🏢</span><span>${c.address}</span></div>` : ''}
+      ${c.phone     ? `<div class="contact-detail"><span>📞</span><a href="tel:${c.phone.replace(/\s/g,'')}" style="color:var(--green);font-weight:600;">${c.phone}</a></div>` : ''}
+      ${c.email     ? `<div class="contact-detail"><span>✉️</span><a href="mailto:${c.email}" style="color:var(--green);">${c.email}</a></div>` : ''}
+      ${c.web       ? `<div class="contact-detail"><span>🌐</span><a href="https://${c.web}" target="_blank" style="color:var(--green);">${c.web}</a></div>` : ''}
+      ${c.party     ? `<div class="contact-detail"><span>🗳️</span><span>Party: ${c.party}</span></div>` : ''}
+    </div>`).join('');
+}
+showContacts('gha');
+</script>
+
+<!-- ══════════════════════════════════════════════════════════
+     MODAL 1 — "I SAW THIS ROAD" STATUS PICKER
+══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="statusModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <h2 id="statusModalTitle">Report what you saw</h2>
+        <div style="font-size:12px;opacity:.8;margin-top:3px;">Your report helps other citizens know what's happening on the ground</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('statusModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="status-btns">
+        <button class="status-btn" onclick="submitStatus('wip')" id="btn-wip">
+          <span class="s-icon">🚧</span>Work in Progress
+        </button>
+        <button class="status-btn" onclick="submitStatus('nw')" id="btn-nw">
+          <span class="s-icon">⏳</span>No Work Yet
+        </button>
+        <button class="status-btn" onclick="submitStatus('done')" id="btn-done">
+          <span class="s-icon">✅</span>Completed
+        </button>
+      </div>
+      <div id="statusModalCounts" style="text-align:center;margin-top:8px;font-size:13px;color:var(--muted);"></div>
+      <div id="statusThanks" style="display:none;text-align:center;padding:14px;background:#e8f5ee;border-radius:8px;margin-top:12px;font-weight:700;color:var(--green);">
+        ✅ Thank you! Your report has been recorded.
+      </div>
+      <p style="font-size:11px;color:#aaa;margin-top:16px;text-align:center;">One report per road, per device. Reports are stored on your device only in this version.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     MODAL 2 — QR CODE
+══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="qrModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <h2>📱 QR Code — Share This Road</h2>
+        <div style="font-size:12px;opacity:.8;margin-top:3px;">Print and post in your community — anyone can scan to see this road's details</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('qrModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="qr-wrap">
+        <div id="qrCanvas"></div>
+        <div class="qr-road-name" id="qrRoadName"></div>
+        <div class="qr-region" id="qrRegion"></div>
+        <div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap;">
+          <button class="btn-print" onclick="printQR()">🖨️ Print QR Card</button>
+          <button class="btn-download" onclick="downloadQR()">⬇️ Download PNG</button>
+        </div>
+      </div>
+      <div id="qrPrintArea" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     MODAL 3 — COMMUNITY COMMENTS
+══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="commentsModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <h2 id="commentsModalTitle">💬 Community Reports</h2>
+        <div style="font-size:12px;opacity:.8;margin-top:3px;">Share what you have observed about this road</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('commentsModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="comment-thread" id="commentThread">
+        <div style="text-align:center;color:var(--muted);font-size:13px;padding:20px 0;">No community reports yet. Be the first to share what you see!</div>
+      </div>
+      <hr style="border:none;border-top:1px solid var(--border);margin:16px 0;">
+      <div style="font-weight:700;font-size:14px;margin-bottom:12px;">Add your observation</div>
+      <div class="comment-form">
+        <input type="text" id="commentName" placeholder="Your name (optional — or write 'Anonymous')">
+        <select id="commentStatus">
+          <option value="">-- What did you see? (optional) --</option>
+          <option value="wip">🚧 Work is in progress</option>
+          <option value="nw">⏳ No work visible yet</option>
+          <option value="done">✅ Road looks completed</option>
+          <option value="partial">🔨 Partial work done</option>
+          <option value="stopped">⛔ Work has stopped</option>
+        </select>
+        <textarea id="commentText" placeholder="Describe what you saw, e.g. 'As of March 2026, machines are on site near Accra junction. Workers present daily.' Photos or details welcome."></textarea>
+        <button class="btn-submit" onclick="submitComment()">📤 Submit Report</button>
+      </div>
+      <p style="font-size:11px;color:#aaa;margin-top:12px;">Reports are saved on this device. Share the page link so others can see your community's updates.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+// SHARED MODAL LOGIC
+// ══════════════════════════════════════════════════════════
+let activeContractId = null;
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+
+// ══════════════════════════════════════════════════════════
+// FEATURE 1 — "I SAW THIS ROAD" STATUS REPORTS
+// ══════════════════════════════════════════════════════════
+function showStatusModal(id) {
+  activeContractId = id;
+  const c = contracts.find(x => x.id === id);
+  document.getElementById('statusModalTitle').textContent = c.name;
+  document.getElementById('statusThanks').style.display = 'none';
+  const r = getReports(id);
+  // Highlight prior vote
+  ['wip','nw','done'].forEach(s => {
+    document.getElementById('btn-' + s).classList.toggle('active-btn', r.myVote === s);
+  });
+  renderStatusCounts(r);
+  openModal('statusModal');
+}
+
+function renderStatusCounts(r) {
+  const total = r.wip + r.nw + r.done;
+  document.getElementById('statusModalCounts').textContent =
+    total === 0 ? 'No reports yet — be the first!'
+    : `Community reports: 🚧 ${r.wip} in progress · ⏳ ${r.nw} no work yet · ✅ ${r.done} completed`;
+}
+
+function submitStatus(status) {
+  const id = activeContractId;
+  const r = getReports(id);
+  if (r.myVote && r.myVote !== status) { r[r.myVote] = Math.max(0, r[r.myVote] - 1); }
+  if (r.myVote !== status) { r[status]++; r.myVote = status; }
+  saveReports(id, r);
+  ['wip','nw','done'].forEach(s => document.getElementById('btn-'+s).classList.toggle('active-btn', s === status));
+  renderStatusCounts(r);
+  document.getElementById('statusThanks').style.display = 'block';
+  // Update inline counts in table
+  updateInlineCounts(id, r);
+}
+
+function updateInlineCounts(id, r) {
+  const el = document.getElementById('counts-' + id);
+  if (el) el.innerHTML = buildCountsHtml(r);
+  const elCard = document.getElementById('counts-card-' + id);
+  if (elCard) elCard.innerHTML = buildCountsHtml(r);
+}
+
+// ══════════════════════════════════════════════════════════
+// FEATURE 2 — QR CODE
+// ══════════════════════════════════════════════════════════
+let qrInstance = null;
+
+function showQRModal(id) {
+  activeContractId = id;
+  const c = contracts.find(x => x.id === id);
+  document.getElementById('qrRoadName').textContent = c.name;
+  document.getElementById('qrRegion').textContent = (c.region || '') + (c.work_type ? ' · ' + c.work_type : '');
+  const url = location.href.split('?')[0] + '?road=' + id;
+  const wrap = document.getElementById('qrCanvas');
+  wrap.innerHTML = '';
+  QRCode.toCanvas(document.createElement('canvas'), url, { width: 220, margin: 2, color: { dark: '#006B3F', light: '#ffffff' } }, (err, canvas) => {
+    if (!err) { wrap.appendChild(canvas); qrInstance = canvas; }
+  });
+  openModal('qrModal');
+}
+
+function printQR() {
+  const c = contracts.find(x => x.id === activeContractId);
+  const canvas = document.querySelector('#qrCanvas canvas');
+  if (!canvas) return;
+  const win = window.open('', '_blank');
+  win.document.write(`
+    <html><head><title>Road QR — ${c.name}</title>
+    <style>body{font-family:Arial,sans-serif;text-align:center;padding:40px;} h2{color:#006B3F;font-size:18px;} p{color:#555;font-size:13px;} .flag{display:inline-flex;gap:0;height:14px;margin-right:8px;vertical-align:middle;} .flag span{width:18px;display:inline-block;} .r{background:#CE1126;} .g{background:#FCD116;} .gr{background:#006B3F;}</style>
+    </head><body>
+    <div><span class="flag"><span class="r"></span><span class="g"></span><span class="gr"></span></span><strong>Know Your Roads — Ghana Big Push</strong></div>
+    <h2>${c.name}</h2>
+    <p>Region: ${c.region} &nbsp;|&nbsp; Type: ${c.work_type}</p>
+    <img src="${canvas.toDataURL()}" style="width:220px;height:220px;margin:16px auto;display:block;border:6px solid #fff;box-shadow:0 2px 12px rgba(0,0,0,.15);">
+    <p style="font-size:12px;color:#888;">Scan this QR code to see the full road details and community reports.<br>Awarded: ${c.date} &nbsp;|&nbsp; Contractor: ${c.contractor !== 'Pending Disclosure' ? c.contractor : 'Pending'}</p>
+    <p style="font-size:11px;color:#aaa;margin-top:20px;">knowyourroads.gh</p>
+    <script>window.onload=()=>{window.print();}<\/script>
+    </body></html>`);
+  win.document.close();
+}
+
+function downloadQR() {
+  const canvas = document.querySelector('#qrCanvas canvas');
+  if (!canvas) return;
+  const c = contracts.find(x => x.id === activeContractId);
+  const a = document.createElement('a');
+  a.download = 'road-qr-' + activeContractId + '.png';
+  a.href = canvas.toDataURL();
+  a.click();
+}
+
+// ══════════════════════════════════════════════════════════
+// FEATURE 3 — COMMUNITY COMMENTS
+// ══════════════════════════════════════════════════════════
+function saveComments(id, arr) {
+  localStorage.setItem('gh_comments_' + id, JSON.stringify(arr));
+}
+
+const statusLabels = { wip:'🚧 Work in progress', nw:'⏳ No work yet', done:'✅ Completed', partial:'🔨 Partial work', stopped:'⛔ Work stopped' };
+const statusBgMap  = { wip:'#fef3c7', nw:'#fee2e2', done:'#d1fae5', partial:'#dbeafe', stopped:'#f3e8ff' };
+const statusClrMap = { wip:'#92400e', nw:'#991b1b', done:'#065f46', partial:'#1e40af', stopped:'#6d28d9' };
+
+function showCommentsModal(id) {
+  activeContractId = id;
+  const c = contracts.find(x => x.id === id);
+  document.getElementById('commentsModalTitle').textContent = '💬 ' + c.name;
+  document.getElementById('commentName').value = '';
+  document.getElementById('commentStatus').value = '';
+  document.getElementById('commentText').value = '';
+  renderComments(id);
+  openModal('commentsModal');
+}
+
+function renderComments(id) {
+  const comments = getComments(id);
+  const thread = document.getElementById('commentThread');
+  if (!comments.length) {
+    thread.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:13px;padding:20px 0;">No community reports yet. Be the first to share what you see!</div>';
+    return;
+  }
+  thread.innerHTML = comments.slice().reverse().map(cm => {
+    const statusBadge = cm.status ? `<span class="comment-status-badge" style="background:${statusBgMap[cm.status]||'#eee'};color:${statusClrMap[cm.status]||'#333'}">${statusLabels[cm.status]||cm.status}</span>` : '';
+    return `<div class="comment-card">
+      <div class="comment-meta">${cm.name || 'Anonymous'} &nbsp;·&nbsp; ${cm.date}${statusBadge}</div>
+      <div>${cm.text}</div>
+    </div>`;
+  }).join('');
+}
+
+function submitComment() {
+  const id = activeContractId;
+  const name = document.getElementById('commentName').value.trim() || 'Anonymous';
+  const status = document.getElementById('commentStatus').value;
+  const text = document.getElementById('commentText').value.trim();
+  if (!text) { alert('Please describe what you saw before submitting.'); return; }
+  const comments = getComments(id);
+  const now = new Date();
+  comments.push({
+    name, status, text,
+    date: now.toLocaleDateString('en-GH', { day:'numeric', month:'short', year:'numeric' })
+  });
+  saveComments(id, comments);
+  document.getElementById('commentText').value = '';
+  document.getElementById('commentName').value = '';
+  document.getElementById('commentStatus').value = '';
+  renderComments(id);
+  // update comment badge in table and card view
+  const badge = document.getElementById('cbadge-' + id);
+  if (badge) { badge.textContent = comments.length + ' '; badge.style.display = 'inline'; }
+  const badgeCard = document.getElementById('cbadge-card-' + id);
+  if (badgeCard) { badgeCard.textContent = comments.length + ' '; }
+}
+
+window.showStatusModal = showStatusModal;
+window.showQRModal = showQRModal;
+window.showCommentsModal = showCommentsModal;
+window.closeModal = closeModal;
+window.submitStatus = submitStatus;
+window.submitComment = submitComment;
+window.printQR = printQR;
+window.downloadQR = downloadQR;
 </script>
 </body>
 </html>
