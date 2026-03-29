@@ -87,8 +87,8 @@
 
   /* TABLE */
   .table-wrap { overflow-x: auto; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; background: var(--card); }
-  thead th { background: var(--green); color: var(--white); padding: 11px 12px; text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .4px; white-space: nowrap; cursor: pointer; user-select: none; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; background: var(--card); }
+  thead th { background: var(--green); color: var(--white); padding: 9px 10px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .4px; white-space: nowrap; cursor: pointer; user-select: none; }
   thead th:hover { background: #005530; }
   thead th .sort-arrow { opacity: .5; margin-left: 4px; }
   thead th.sorted .sort-arrow { opacity: 1; }
@@ -96,7 +96,7 @@
   tbody tr:hover { background: #f0f8f4; }
   tbody tr.flagged { background: inherit; }
   tbody tr.flagged:hover { background: #f0f8f4; }
-  tbody td { padding: 10px 12px; vertical-align: top; }
+  tbody td { padding: 8px 10px; vertical-align: top; }
   .proj-name { font-weight: 600; font-size: 12px; line-height: 1.4; max-width: 260px; }
   .amount-cell { font-weight: 700; white-space: nowrap; }
   .region-pill { display: inline-block; background: #e8f5ee; color: var(--green); padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; white-space: nowrap; }
@@ -208,11 +208,12 @@
   .btn-download:hover { background:#d1fae5; }
 
   /* Action buttons in table */
-  .action-btn { display:block; width:100%; border:none; border-radius:6px; padding:5px 8px; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap; margin-bottom:3px; text-align:center; }
-  .action-btn.share { background:var(--green); color:#fff; }
-  .action-btn.seen  { background:#fef3c7; color:#92400e; }
-  .action-btn.qr    { background:#e8eef8; color:#1e40af; }
-  .action-btn.cmts  { background:#f3e8ff; color:#6d28d9; }
+  .action-grid { display:grid; grid-template-columns:1fr 1fr; gap:3px; min-width:130px; }
+  .action-btn { border:none; border-radius:5px; padding:4px 6px; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap; text-align:center; }
+  .action-btn.share { background:var(--green); color:#fff; grid-column:1/-1; }
+  .action-btn.seen  { background:#fef3c7; color:#92400e; border:1px solid #fcd34d; }
+  .action-btn.qr    { background:#e8eef8; color:#1e40af; border:1px solid #bfdbfe; }
+  .action-btn.cmts  { background:#f3e8ff; color:#6d28d9; border:1px solid #ddd6fe; grid-column:1/-1; }
   .action-btn:hover { opacity:.85; }
 </style>
 </head>
@@ -795,11 +796,13 @@ function render() {
       <td style="font-size:11px;white-space:nowrap;">${agencyShort(c.agency)}</td>
       <td style="font-size:12px;white-space:nowrap;">${c.date}</td>
       <td style="text-align:center;">${estCompletion(c)}</td>
-      <td style="min-width:96px;">
-        <button class="action-btn share" onclick="shareProject(${c.id})">📤 Share</button>
-        <button class="action-btn seen"  onclick="showStatusModal(${c.id})">👁️ I Saw This</button>
-        <button class="action-btn qr"    onclick="showQRModal(${c.id})">📱 QR Code</button>
-        <button class="action-btn cmts"  onclick="showCommentsModal(${c.id})">💬 <span id="cbadge-${c.id}" style="display:none;"></span>Comments</button>
+      <td style="min-width:138px;">
+        <div class="action-grid">
+          <button class="action-btn share" onclick="shareProject(${c.id})">📤 Share</button>
+          <button class="action-btn seen"  onclick="showStatusModal(${c.id})">👁️ I Saw This</button>
+          <button class="action-btn qr"    onclick="showQRModal(${c.id})">📱 QR</button>
+          <button class="action-btn cmts"  onclick="showCommentsModal(${c.id})">💬 <span id="cbadge-${c.id}"></span>Comments</button>
+        </div>
         <div class="flag-chips" style="margin-top:4px;">${chipHtml(c.flags)}</div>
       </td>
     </tr>`).join('');
