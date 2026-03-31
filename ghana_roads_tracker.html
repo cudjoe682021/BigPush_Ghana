@@ -344,6 +344,10 @@
       <div class="chart-title">Contracts by Awarding Agency</div>
       <div class="chart-wrap"><canvas id="agencyChart"></canvas></div>
     </div>
+    <div class="chart-card" style="grid-column:1/-1;">
+      <div class="chart-title">🏆 Top 10 Highest-Value Road Projects (GHS billions)</div>
+      <div class="chart-wrap" style="height:320px;"><canvas id="top10Chart"></canvas></div>
+    </div>
   </div>
 </section>
 
@@ -653,6 +657,42 @@ new Chart(document.getElementById('agencyChart'), {
   type: 'pie',
   data: {labels: Object.keys(agencyCounts), datasets: [{data: Object.values(agencyCounts), backgroundColor: [ghsGreen, ghsRed, '#d97706']}]},
   options: {responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom', labels:{font:{size:12}, padding:10}}}}
+});
+
+// ─── TOP 10 HIGHEST-VALUE ROADS ────────────────────────────────
+const top10 = [...contracts]
+  .filter(c => c.amount)
+  .sort((a,b) => b.amount - a.amount)
+  .slice(0,10);
+new Chart(document.getElementById('top10Chart'), {
+  type: 'bar',
+  data: {
+    labels: top10.map(c => c.name.length > 45 ? c.name.slice(0,42)+'…' : c.name),
+    datasets: [{
+      label: 'Contract Value (GHS billions)',
+      data: top10.map(c => +(c.amount/1e9).toFixed(2)),
+      backgroundColor: top10.map((_,i) => i === 0 ? ghsRed : i === 1 ? '#d97706' : i === 2 ? '#ca8a04' : ghsGreen),
+      borderRadius: 5,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {display:false},
+      tooltip: {
+        callbacks: {
+          label: ctx => `GHS ${ctx.raw}B`,
+          afterLabel: ctx => top10[ctx.dataIndex].region + ' · ' + (top10[ctx.dataIndex].contractor || 'TBC')
+        }
+      }
+    },
+    scales: {
+      x: { ticks: {callback: v => 'GHS '+v+'B'}, grid:{color:'#eee'} },
+      y: { ticks: {font:{size:11}} }
+    }
+  }
 });
 
 // ─── TABLE ─────────────────────────────────────────────────────
