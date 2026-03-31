@@ -348,6 +348,10 @@
       <div class="chart-title">🏆 Top 10 Highest-Value Road Projects (GHS billions)</div>
       <div class="chart-wrap" style="height:320px;"><canvas id="top10Chart"></canvas></div>
     </div>
+    <div class="chart-card" style="grid-column:1/-1;">
+      <div class="chart-title">📏 Top 10 Longest Road Projects (km) — verified distances</div>
+      <div class="chart-wrap" style="height:320px;"><canvas id="kmChart"></canvas></div>
+    </div>
   </div>
 </section>
 
@@ -690,6 +694,65 @@ new Chart(document.getElementById('top10Chart'), {
     },
     scales: {
       x: { ticks: {callback: v => 'GHS '+v+'B'}, grid:{color:'#eee'} },
+      y: { ticks: {font:{size:11}} }
+    }
+  }
+});
+
+// ─── TOP 10 LONGEST ROADS (verified km data) ───────────────────
+const ROAD_KM = [
+  { name: 'REHABILITATION OF TEMA - AFLAO ROAD',                                              km: 166  },
+  { name: 'REHABILITATION OF WENCHI - SAWLA',                                                  km: 159  },
+  { name: 'REHABILITATION OF WENCHI - SAWLA INCLUDING TINGA TOWN ROADS',                       km: 159  },
+  { name: 'REHABILITATION OF WENCHI SAWLA AND OTHERS',                                         km: 159  },
+  { name: 'REHABILITATION OF WENCHISAWLA ROAD',                                                km: 159  },
+  { name: 'REHABILITATION OF WENCHISAWLA ROAD INCLUDING BAMBOI AND BANDA NKWANTA TOWN ROADS',  km: 159  },
+  { name: 'UPGRADING OF SABOBA - CHEREPONI ROAD - LOT 1',                                      km: 23.5 },
+  { name: 'UPGRADING OF SABOBA - CHEREPONI ROAD - LOT 2',                                      km: 23.5 },
+  { name: 'UPGRADING OF EASTERN CORRIDOR ROAD (UPGRADING OF NKWANTA - OTI DAMANKO)',           km: 50.3 },
+  { name: 'RECONSTRUCTION OF NKWANTA - DAMBAI ROAD (INCLUDING TOWN ROADS)',                    km: 50   },
+  { name: 'DUALISATION OF WINNEBA - CAPE COAST ROAD LOT 2',                                    km: 45   },
+  { name: 'DUALISATION OF WINNEBA - CAPE COAST ROAD LOT 3',                                    km: 45.4 },
+  { name: 'REDEVELOPMENT OF WINNEBA - TAKORADI ROAD, DUALIZATION OF CAPE COAST - TAKORADI LOT 4', km: 24.5 },
+  { name: 'REHABILITATION OF ATIMPOKU - ASIKUMA JUNCTION',                                     km: 36.5 },
+  { name: 'REHABILITATION OF BEREKUM-SEIKWA ROAD',                                             km: 34.6 },
+  { name: 'REHABILITATION OF TECHIMAN - NKONSIA - WENCHI ROAD',                                km: 33   },
+];
+contracts.forEach(c => {
+  const match = ROAD_KM.find(r => r.name === c.name.toUpperCase().trim());
+  if (match) c.km = match.km;
+});
+const _seenKm = new Set();
+const top10km = [...contracts]
+  .filter(c => c.km && !_seenKm.has(c.km + c.name.slice(0,20)) && _seenKm.add(c.km + c.name.slice(0,20)))
+  .sort((a,b) => b.km - a.km)
+  .slice(0,10);
+new Chart(document.getElementById('kmChart'), {
+  type: 'bar',
+  data: {
+    labels: top10km.map(c => c.name.length > 50 ? c.name.slice(0,47)+'…' : c.name),
+    datasets: [{
+      label: 'Road Length (km)',
+      data: top10km.map(c => c.km),
+      backgroundColor: top10km.map((_,i) => i === 0 ? ghsRed : i === 1 ? '#d97706' : i === 2 ? '#ca8a04' : ghsGreen),
+      borderRadius: 5,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {display:false},
+      tooltip: {
+        callbacks: {
+          label: ctx => `${ctx.raw} km`,
+          afterLabel: ctx => top10km[ctx.dataIndex].region + ' · ' + (top10km[ctx.dataIndex].contractor || 'TBC')
+        }
+      }
+    },
+    scales: {
+      x: { ticks: {callback: v => v+' km'}, grid:{color:'#eee'} },
       y: { ticks: {font:{size:11}} }
     }
   }
