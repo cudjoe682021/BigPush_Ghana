@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Know Your Roads — Ghana Big Push Road Tracker</title>
+<title>RoadWatch Ghana — See the Progress. Report the Truth.</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 <style>
@@ -215,6 +215,98 @@
   .action-btn.qr    { background:#e8eef8; color:#1e40af; border:1px solid #bfdbfe; }
   .action-btn.cmts  { background:#f3e8ff; color:#6d28d9; border:1px solid #ddd6fe; grid-column:1/-1; }
   .action-btn:hover { opacity:.85; }
+  .action-btn.sos { background:#fee2e2; color:var(--red); border:1px solid #fca5a5; grid-column:1/-1; }
+
+  /* HERO TAGLINE */
+  .hero-tagline { font-size:16px; font-weight:700; color:var(--gold); font-style:italic; margin-bottom:14px; }
+
+  /* NAV PROFILE PILL */
+  .nav-profile-pill { background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.35); color:#fff; font-size:12px; font-weight:700; padding:6px 12px; border-radius:20px; cursor:pointer; white-space:nowrap; }
+  .nav-profile-pill:hover { background:rgba(255,255,255,.25); }
+
+  /* ECOSYSTEM MODULE STRIP */
+  .module-strip { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:8px; }
+  .module-tile { background:#fff; border-radius:10px; padding:16px 10px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,.07); cursor:pointer; text-decoration:none; color:inherit; border:2px solid transparent; transition:all .15s; }
+  .module-tile:hover { border-color:var(--gold); transform:translateY(-2px); }
+  .module-tile.module-live { border-color:var(--green); background:#f0f8f4; }
+  .module-icon { font-size:28px; margin-bottom:6px; }
+  .module-name { font-weight:700; font-size:13px; margin-bottom:4px; }
+  .module-status { font-size:11px; color:var(--muted); font-weight:600; }
+  .module-status.live { color:var(--green); }
+
+  /* HEALTH SCORE */
+  .health-badge { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:800; padding:3px 9px; border-radius:12px; white-space:nowrap; }
+  .health-90, .health-80 { background:#d1fae5; color:#065f46; }
+  .health-60, .health-70 { background:#dbeafe; color:#1e40af; }
+  .health-40, .health-50 { background:#fef3c7; color:#92400e; }
+  .health-20, .health-30 { background:#fee2e2; color:#991b1b; }
+  .health-0, .health-10 { background:#fee2e2; color:#7f1d1d; }
+  .health-panel { background:#f5f5f0; border-radius:10px; padding:16px; margin:14px 0; }
+  .health-score-big { font-size:38px; font-weight:800; }
+  .health-row { display:flex; justify-content:space-between; align-items:center; font-size:12px; margin-top:8px; gap:10px; }
+  .health-bar-track { flex:1; height:8px; background:#e5e2d9; border-radius:4px; overflow:hidden; }
+  .health-bar-fill { height:100%; background:var(--green); border-radius:4px; }
+
+  /* REPUTATION / PROFILE */
+  .profile-card { background:linear-gradient(135deg,var(--green) 0%,#004d2e 100%); color:#fff; border-radius:14px; padding:22px; margin-bottom:20px; }
+  .profile-top { display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; }
+  .profile-badge-icon { font-size:40px; }
+  .profile-points { font-size:28px; font-weight:800; }
+  .profile-tier-name { font-size:14px; font-weight:700; color:var(--gold); }
+  .profile-progress-track { background:rgba(255,255,255,.2); height:10px; border-radius:5px; overflow:hidden; margin-top:14px; }
+  .profile-progress-fill { background:var(--gold); height:100%; border-radius:5px; transition:width .3s; }
+  .profile-progress-label { font-size:11px; opacity:.85; margin-top:6px; }
+  .tier-table { width:100%; border-collapse:collapse; margin-top:8px; }
+  .tier-table td, .tier-table th { padding:10px 12px; font-size:13px; border-bottom:1px solid var(--border); }
+  .tier-table th { text-align:left; color:var(--muted); font-size:11px; text-transform:uppercase; }
+  .tier-table tr.current-tier { background:#e8f5ee; font-weight:700; }
+  .trusted-badge { display:inline-block; background:#e0e7ff; color:#3730a3; font-size:10px; font-weight:800; padding:1px 7px; border-radius:8px; margin-left:5px; vertical-align:middle; }
+  .name-input-row { display:flex; gap:8px; margin-top:14px; }
+  .name-input-row input { flex:1; padding:8px 12px; border-radius:6px; border:none; font-size:13px; }
+  .name-input-row button { background:var(--gold); color:#000; border:none; border-radius:6px; padding:8px 16px; font-weight:700; cursor:pointer; font-size:13px; }
+
+  /* DISASTER / ALERTS */
+  .disaster-type-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:14px 0; }
+  .disaster-type-btn { border:2px solid var(--border); background:#fff; border-radius:10px; padding:12px 8px; cursor:pointer; text-align:center; font-size:12px; font-weight:600; }
+  .disaster-type-btn:hover, .disaster-type-btn.active-btn { border-color:var(--red); background:#fff0f0; }
+  .disaster-type-btn .s-icon { font-size:24px; display:block; margin-bottom:4px; }
+  .alerts-list { display:flex; flex-direction:column; gap:10px; }
+  .alert-item { background:#fff; border-radius:10px; padding:14px 16px; box-shadow:0 2px 8px rgba(0,0,0,.06); border-left:4px solid var(--border); display:flex; gap:12px; align-items:flex-start; }
+  .alert-item.sev-danger { border-left-color:var(--red); }
+  .alert-item.sev-info { border-left-color:var(--green); }
+  .alert-item .a-icon { font-size:20px; }
+  .alert-item .a-title { font-weight:700; font-size:13px; }
+  .alert-item .a-meta { font-size:11px; color:var(--muted); margin-top:2px; }
+  .digest-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin-bottom:20px; }
+  .digest-card { background:#fff; border-radius:10px; padding:16px; box-shadow:0 2px 8px rgba(0,0,0,.07); border-left:4px solid #8b5cf6; }
+  .digest-label { font-size:11px; color:var(--muted); text-transform:uppercase; margin-bottom:4px; }
+  .digest-value { font-size:15px; font-weight:700; }
+
+  /* OPEN DATA */
+  .opendata-box { background:#fff; border-radius:10px; padding:22px; box-shadow:0 2px 8px rgba(0,0,0,.07); }
+  .opendata-btns { display:flex; gap:12px; flex-wrap:wrap; margin:16px 0; }
+  .btn-data { background:var(--green); color:#fff; border:none; border-radius:8px; padding:12px 22px; font-weight:700; font-size:13px; cursor:pointer; }
+  .btn-data.csv { background:#2563eb; }
+  .btn-data:hover { opacity:.9; }
+
+  /* CONTRACTOR DIRECTORY */
+  .contractor-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:14px; }
+  .contractor-card { background:#fff; border-radius:10px; padding:16px; box-shadow:0 2px 8px rgba(0,0,0,.07); border-top:4px solid var(--green); }
+  .contractor-rank { font-size:11px; color:var(--muted); font-weight:700; }
+  .contractor-name-c { font-weight:700; font-size:13px; margin:4px 0 8px; line-height:1.3; }
+  .contractor-stat-row { display:flex; justify-content:space-between; font-size:12px; margin-top:4px; }
+
+  /* PHOTO ATTACH */
+  .photo-attach-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+  .photo-preview { max-width:80px; max-height:80px; border-radius:6px; display:none; }
+  .comment-photo { max-width:100%; border-radius:8px; margin-top:8px; cursor:pointer; display:block; }
+  .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--green); color:#fff; padding:12px 22px; border-radius:24px; font-size:13px; font-weight:700; box-shadow:0 4px 20px rgba(0,0,0,.25); z-index:2000; opacity:0; pointer-events:none; transition:all .25s; }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .nav-profile-pill { font-size:11px; padding:5px 9px; }
+  }
 </style>
 </head>
 <body>
@@ -222,59 +314,102 @@
 <nav>
   <div class="nav-logo">
     <div class="flag-strip"><span class="r"></span><span class="g"></span><span class="gr"></span></div>
-    Know Your Roads 🇬🇭
+    RoadWatch Ghana
   </div>
   <div class="nav-links">
     <a href="#overview">Overview</a>
-    <a href="#charts">By Region</a>
-    <a href="#timeline">Timeline</a>
+    <a href="#ecosystem">Ecosystem</a>
     <a href="#contracts">Road Projects</a>
-    <a href="#contacts">Contacts</a>
-    <a href="#about">Learn More</a>
+    <a href="#alerts">🚨 Alerts</a>
+    <a href="#community">🏆 Reputation</a>
+    <a href="#contractors">Contractors</a>
+    <a href="#opendata">Open Data</a>
+    <a href="#about">Mission</a>
   </div>
+  <a id="navProfilePill" class="nav-profile-pill" href="#community" title="Your reputation on this device">🌱 0 pts</a>
 </nav>
 
 <div class="hero">
-  <h1>🇬🇭 Know Your Roads — Ghana Big Push Tracker</h1>
-  <p>Find out which roads are being built or repaired in your community. Search by region, see who is doing the work, and share updates with family and friends across Ghana.</p>
+  <h1>🇬🇭 RoadWatch Ghana</h1>
+  <div class="hero-tagline">"See the Progress. Report the Truth."</div>
+  <p>Track public infrastructure projects across Ghana with real government contract data, citizen reports, and community verification — starting with the Big Push road programme. Search by region, see who is doing the work, report what you see on the ground, and share updates with your community.</p>
   <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:20px 0 8px;">
     <a href="#contracts" style="background:var(--gold);color:#000;font-weight:700;padding:11px 24px;border-radius:8px;text-decoration:none;font-size:15px;">🔍 Find Roads Near Me</a>
     <a href="#overview" style="background:rgba(255,255,255,0.15);color:#fff;font-weight:600;padding:11px 24px;border-radius:8px;text-decoration:none;font-size:15px;border:1px solid rgba(255,255,255,0.4);">📊 Programme Overview</a>
+    <button onclick="showDisasterModal()" style="background:var(--red);color:#fff;font-weight:700;padding:11px 24px;border-radius:8px;border:none;font-size:15px;cursor:pointer;">🚨 Report an Emergency</button>
   </div>
-  <div class="hero-source">Data: Ghana Highway Authority · Urban Roads Dept · Dept of Feeder Roads · Programme launched 16 Sep 2025 · 81 confirmed road contracts</div>
+  <div class="hero-source">Data: Ghana Highway Authority · Urban Roads Dept · Dept of Feeder Roads · Programme launched 16 Sep 2025 · 54 confirmed road contracts</div>
 </div>
+
+<!-- ECOSYSTEM STRIP -->
+<section id="ecosystem" style="padding-top:24px;padding-bottom:0;">
+  <div class="section-title">🧭 The RoadWatch Ecosystem</div>
+  <div style="font-size:13px;color:var(--muted);margin-bottom:14px;">RoadWatch Ghana starts with roads and grows into a full public-infrastructure monitor. Roads is live today — the rest are on the roadmap.</div>
+  <div class="module-strip">
+    <a href="#contracts" class="module-tile module-live">
+      <div class="module-icon">🛣️</div>
+      <div class="module-name">Roads</div>
+      <div class="module-status live">Live · 60 projects</div>
+    </a>
+    <div class="module-tile" onclick="showModuleModal('schools')">
+      <div class="module-icon">🏫</div>
+      <div class="module-name">Schools</div>
+      <div class="module-status">Coming Soon</div>
+    </div>
+    <div class="module-tile" onclick="showModuleModal('hospitals')">
+      <div class="module-icon">🏥</div>
+      <div class="module-name">Hospitals</div>
+      <div class="module-status">Coming Soon</div>
+    </div>
+    <div class="module-tile" onclick="showModuleModal('water')">
+      <div class="module-icon">💧</div>
+      <div class="module-name">Water</div>
+      <div class="module-status">Coming Soon</div>
+    </div>
+    <div class="module-tile" onclick="showModuleModal('energy')">
+      <div class="module-icon">⚡</div>
+      <div class="module-name">Energy</div>
+      <div class="module-status">Coming Soon</div>
+    </div>
+    <div class="module-tile" onclick="showModuleModal('markets')">
+      <div class="module-icon">🏛️</div>
+      <div class="module-name">Markets &amp; Public Buildings</div>
+      <div class="module-status">Coming Soon</div>
+    </div>
+  </div>
+</section>
 
 <!-- STATS -->
 <div id="stats-bar-anchor" class="stats-bar">
   <div class="stat-card">
     <div class="stat-label">Roads in This Tracker</div>
-    <div class="stat-value">91</div>
-    <div class="stat-sub">81 RTI-confirmed + 10 from MRH official list</div>
+    <div class="stat-value">60</div>
+    <div class="stat-sub">54 confirmed on the GHA official list + 6 MRH pending disclosure</div>
   </div>
   <div class="stat-card gold-border">
-    <div class="stat-label">Total Investment</div>
-    <div class="stat-value">GHS 73B+</div>
-    <div class="stat-sub">One of Ghana's largest ever road programmes</div>
+    <div class="stat-label">Total Investment (GHS contracts)</div>
+    <div class="stat-value" id="statInvestment">—</div>
+    <div class="stat-sub">Sum of confirmed &amp; pending GHS-denominated contracts</div>
   </div>
   <div class="stat-card">
     <div class="stat-label">Kilometres of Roads</div>
-    <div class="stat-value">2,000+</div>
-    <div class="stat-sub">km being built or repaired nationwide</div>
+    <div class="stat-value" id="statKm">—</div>
+    <div class="stat-sub">Sum of real per-contract lengths on file</div>
   </div>
   <div class="stat-card">
     <div class="stat-label">Jobs Created</div>
     <div class="stat-value">490,000</div>
-    <div class="stat-sub">Targeted across the construction sector</div>
+    <div class="stat-sub">Targeted across the construction sector (govt. estimate)</div>
   </div>
   <div class="stat-card">
     <div class="stat-label">Ghanaian Contractors</div>
-    <div class="stat-value">52</div>
+    <div class="stat-value" id="statGhContractors">—</div>
     <div class="stat-sub">Companies awarded work on these roads</div>
   </div>
   <div class="stat-card gold-border">
     <div class="stat-label">Regions Covered</div>
-    <div class="stat-value">16 / 16</div>
-    <div class="stat-sub">Every region of Ghana has road works</div>
+    <div class="stat-value" id="statRegions">—</div>
+    <div class="stat-sub">Regions of Ghana with tracked road works</div>
   </div>
 </div>
 
@@ -293,19 +428,19 @@
       <div style="font-size:12px;color:#6b6b6b;margin-top:4px;">GHS 13.8B (2025 Parliament) + GHS 30B (2026 Budget)</div>
     </div>
     <div style="background:#fff;border-radius:10px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.07);border-left:5px solid var(--green)">
-      <div style="font-size:12px;color:#6b6b6b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Roads Under Construction</div>
-      <div style="font-size:18px;font-weight:800;">2,000+ km</div>
-      <div style="font-size:12px;color:#6b6b6b;margin-top:4px;">73 major projects across all 16 regions · 490,000 jobs targeted</div>
+      <div style="font-size:12px;color:#6b6b6b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Government-Stated Target</div>
+      <div style="font-size:18px;font-weight:800;">2,000+ km · 490,000 jobs</div>
+      <div style="font-size:12px;color:#6b6b6b;margin-top:4px;">Programme-wide goal stated by government; this tracker currently holds contract-level detail for 60 of those projects</div>
     </div>
     <div style="background:#fff;border-radius:10px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.07);border-left:5px solid var(--red)">
-      <div style="font-size:12px;color:#6b6b6b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Total Contracts Awarded</div>
-      <div style="font-size:18px;font-weight:800;">107 contracts</div>
-      <div style="font-size:12px;color:#6b6b6b;margin-top:4px;">54 new + 23 novated (inherited) · Sep 2025–Jan 2026</div>
+      <div style="font-size:12px;color:#6b6b6b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Contracts on the GHA Official List</div>
+      <div style="font-size:18px;font-weight:800;">54 confirmed</div>
+      <div style="font-size:12px;color:#6b6b6b;margin-top:4px;">From the Ministry's own "Full List of Big Push Infrastructure Programme" · Sep 2025–Jan 2026</div>
     </div>
     <div style="background:#fff;border-radius:10px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.07);border-left:5px solid #8b5cf6">
-      <div style="font-size:12px;color:#6b6b6b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">New vs. Inherited Projects</div>
-      <div style="font-size:18px;font-weight:800;">54 new + 23 old</div>
-      <div style="font-size:12px;color:#6b6b6b;margin-top:4px;">23 previously stalled projects (GHS 14.8B) brought back to life</div>
+      <div style="font-size:12px;color:#6b6b6b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Still Awaiting Disclosure</div>
+      <div style="font-size:18px;font-weight:800;">6 authorized</div>
+      <div style="font-size:12px;color:#6b6b6b;margin-top:4px;">On the MRH authorization list but contract value/contractor not yet public</div>
     </div>
     <div style="background:#fff;border-radius:10px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.07);border-left:5px solid #0891b2">
       <div style="font-size:12px;color:#6b6b6b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">How to Use This Tracker</div>
@@ -319,8 +454,8 @@
 <div class="alert-banner" style="margin-bottom:24px;background:#e8f5ee;border-color:var(--green);">
   <span class="alert-icon">ℹ️</span>
   <div>
-    <div class="alert-title" style="color:var(--green);">About this data — 91 roads tracked · 70% targeted for completion by end-2027</div>
-    <div class="alert-text"><strong>81 contracts</strong> have full details from Right to Information (RTI) requests (The Fourth Estate, March 2026). <strong>10 additional roads</strong> are from the MRH official Big Push authorization list (mrh.gov.gh) — confirmed projects awaiting full disclosure. The <strong>Est. Completion</strong> column shows estimated dates calculated from award date + contract duration (based on work type and value), aligned to the government's stated target of 70% completion by end-2027 (Roads Minister, March 2026). These are estimates — no individual contract completion dates have been publicly disclosed. Sources: The Fourth Estate · MRH (mrh.gov.gh) · GHA (highways.gov.gh) · Ministry of Finance 2024 Budget (mofep.gov.gh) · Ghanaian Times, March 2026.</div>
+    <div class="alert-title" style="color:var(--green);">About this data — 60 roads tracked · 70% targeted for completion by end-2027</div>
+    <div class="alert-text"><strong>54 contracts</strong> have full details — including real per-contract kilometre lengths — from the Ministry of Roads &amp; Highways' own "Full List of Big Push Infrastructure Programme." <strong>6 remaining roads</strong> are from the MRH official Big Push authorization list (mrh.gov.gh) — confirmed projects still awaiting full contract disclosure. The <strong>Est. Completion</strong> column shows estimated dates calculated from award date + contract duration (based on work type and value), aligned to the government's stated target of 70% completion by end-2027 (Roads Minister, March 2026). These are estimates — no individual contract completion dates have been publicly disclosed. Sources: Ministry of Roads &amp; Highways "Full List of Big Push Infrastructure Programme" · MRH (mrh.gov.gh) · GHA (highways.gov.gh) · Ministry of Finance 2024 Budget (mofep.gov.gh).</div>
   </div>
 </div>
 
@@ -376,18 +511,18 @@
   <div style="background:var(--card);border-radius:10px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:8px;">
     <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">The following high-profile projects are part of the Big Push. Use the contract table below to find individual lot awards. Some projects span multiple contractors and lots.</p>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;font-size:13px;">
-      <div style="background:#f0f8f4;border-radius:8px;padding:14px;border-left:4px solid var(--green)"><strong>Kumasi Outer Ring Road</strong><br><span style="color:var(--muted)">Ashanti Region · 3 lots · Arab Contractors Ghana Ltd · Contracts #64–66</span></div>
-      <div style="background:#f0f8f4;border-radius:8px;padding:14px;border-left:4px solid var(--green)"><strong>Tamale Third Ring Road (Phase 1)</strong><br><span style="color:var(--muted)">Northern Region · 3 lots · China Railway, Sinohydro, Munisco · Contracts #59–61</span></div>
-      <div style="background:#f0f8f4;border-radius:8px;padding:14px;border-left:4px solid var(--green)"><strong>Dualisation of Winneba–Cape Coast Road</strong><br><span style="color:var(--muted)">Central Region · Lots 2 &amp; 3 · Contracts #8–9 · GHS 5.7B</span></div>
-      <div style="background:#f0f8f4;border-radius:8px;padding:14px;border-left:4px solid var(--green)"><strong>Cape Coast–Takoradi Dualisation</strong><br><span style="color:var(--muted)">Central/Western · Lots 4, 5, 6 · Contracts #10, 42, 43 · GHS 9.0B</span></div>
-      <div style="background:#f0f8f4;border-radius:8px;padding:14px;border-left:4px solid var(--green)"><strong>Dambai Bridge Construction</strong><br><span style="color:var(--muted)">Oti Region · Maripoma Enterprise Ltd · Contract #23 · GHS 3.99B</span></div>
-      <div style="background:#f0f8f4;border-radius:8px;padding:14px;border-left:4px solid var(--green)"><strong>Volta Region Corridor (177 km)</strong><br><span style="color:var(--muted)">Atimpoku–Asikuma–Ho–Kpetoe–Penyi–Aflao · Contracts #14, 33–41</span></div>
-      <div style="background:#f0f8f4;border-radius:8px;padding:14px;border-left:4px solid var(--green)"><strong>Dodowa–Afienya–Dawhenya Road</strong><br><span style="color:var(--muted)">Greater Accra · Oswal Investment Ltd · Contract #16 · GHS 1.12B</span></div>
-      <div style="background:#f0f8f4;border-radius:8px;padding:14px;border-left:4px solid var(--green)"><strong>Tema–Aflao Road</strong><br><span style="color:var(--muted)">Greater Accra/Volta · First Sky Ltd · Contract #15 · GHS 1.48B</span></div>
-      <div style="background:#f0f8f4;border-radius:8px;padding:14px;border-left:4px solid var(--green)"><strong>Sunyani Outer Ring Road</strong><br><span style="color:var(--muted)">Bono Region · 3 lots · Kofi Job Co. Ltd · Contracts #62–63 + 1 pending</span></div>
-      <div style="background:#f0f8f4;border-radius:8px;padding:14px;border-left:4px solid var(--green)"><strong>Wa–Han–Lawra Road Corridor</strong><br><span style="color:var(--muted)">Upper West · 3 lots · P&amp;W Ghanem, Maripoma, Greenhouse · Contracts #31, 77–79</span></div>
-      <div style="background:#f0f8f4;border-radius:8px;padding:14px;border-left:4px solid var(--green)"><strong>Tumu–Navrongo Corridor</strong><br><span style="color:var(--muted)">Upper West/Upper East · 3 lots · Mawums Ltd, Myturn Ltd · Contracts #74–76</span></div>
-      <div style="background:#fff3cd;border-radius:8px;padding:14px;border-left:4px solid #f59e0b"><strong>Adawso Bridge</strong><br><span style="color:var(--muted)">Eastern Region · SCL Sonitra · Contract #58 · USD $497.7M (USD-denominated)</span></div>
+      <div style="background:#f0f8f4;border-radius:8px;padding:14px;border-left:4px solid var(--green)"><strong>Kumasi Outer Ring Road</strong><br><span style="color:var(--muted)">Ashanti Region · 3 lots · Arab Contractors Ghana Ltd · 45 km total</span></div>
+      <div style="background:#f0f8f4;border-radius:8px;padding:14px;border-left:4px solid var(--green)"><strong>Tamale Third Ring Road (Phase 1)</strong><br><span style="color:var(--muted)">Northern Region · 3 lots · China Railway, Sinohydro, Munisco · 33 km total</span></div>
+      <div style="background:#f0f8f4;border-radius:8px;padding:14px;border-left:4px solid var(--green)"><strong>Dualisation of Winneba–Cape Coast Road</strong><br><span style="color:var(--muted)">Central Region · 2 lots · M.A &amp; Constant Company · GHS 5.7B</span></div>
+      <div style="background:#f0f8f4;border-radius:8px;padding:14px;border-left:4px solid var(--green)"><strong>Cape Coast–Takoradi Dualisation</strong><br><span style="color:var(--muted)">Central/Western · 3 lots · S&amp;L Construction, Alkyro Jules · GHS 9.0B</span></div>
+      <div style="background:#f0f8f4;border-radius:8px;padding:14px;border-left:4px solid var(--green)"><strong>Dambai Bridge Construction</strong><br><span style="color:var(--muted)">Oti Region · Maripoma Enterprise Ltd · GHS 3.99B</span></div>
+      <div style="background:#f0f8f4;border-radius:8px;padding:14px;border-left:4px solid var(--green)"><strong>Volta Region Corridor</strong><br><span style="color:var(--muted)">Atimpoku–Asikuma–Ho–Kpetoe–Penyi–Aflao · 9 lots across multiple contractors</span></div>
+      <div style="background:#f0f8f4;border-radius:8px;padding:14px;border-left:4px solid var(--green)"><strong>Dodowa–Afienya–Dawhenya Road</strong><br><span style="color:var(--muted)">Greater Accra · Oswal Investment Ltd · GHS 1.12B</span></div>
+      <div style="background:#f0f8f4;border-radius:8px;padding:14px;border-left:4px solid var(--green)"><strong>Tema–Aflao Road</strong><br><span style="color:var(--muted)">Greater Accra · First Sky Ltd · GHS 1.48B</span></div>
+      <div style="background:#f0f8f4;border-radius:8px;padding:14px;border-left:4px solid var(--green)"><strong>Sunyani Outer Ring Road</strong><br><span style="color:var(--muted)">Bono Region · 2 lots · Kofi Job Co. Ltd · 34 km total</span></div>
+      <div style="background:#f0f8f4;border-radius:8px;padding:14px;border-left:4px solid var(--green)"><strong>Wa–Han Road</strong><br><span style="color:var(--muted)">Upper West · Mo &amp; Mo Company Ltd · 54 km · GHS 436M</span></div>
+      <div style="background:#f0f8f4;border-radius:8px;padding:14px;border-left:4px solid var(--green)"><strong>Navrongo–Tumu Road</strong><br><span style="color:var(--muted)">Upper East · Medmo Company Ltd · 27 km · GHS 360M</span></div>
+      <div style="background:#fff3cd;border-radius:8px;padding:14px;border-left:4px solid #f59e0b"><strong>Adawso Bridge</strong><br><span style="color:var(--muted)">Eastern Region · SCL Sonitra · USD $497.7M (USD-denominated)</span></div>
     </div>
   </div>
 </section>
@@ -398,7 +533,7 @@
   <div class="flags-grid">
     <div class="flag-card fc-blue">
       <h3>🛣️ Roads Being Rehabilitated</h3>
-      <div class="flag-num" style="color:#2563eb">51</div>
+      <div class="flag-num" style="color:#2563eb" id="rehabNum">—</div>
       <div class="flag-desc">Existing roads being repaired and restored to good condition so communities can travel safely.</div>
     </div>
     <div class="flag-card fc-purple" id="dupCard">
@@ -430,8 +565,8 @@
   <div style="font-size:13px;color:var(--muted);margin-bottom:10px;">Search for roads in your region, town, or district. Click <strong>Share</strong> on any road to send it to friends and family on WhatsApp or social media.</div>
   <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;font-size:12px;align-items:center;">
     <span style="font-weight:700;color:var(--muted);">Data sources:</span>
-    <span style="background:#d1fae5;color:#065f46;font-weight:700;padding:4px 12px;border-radius:20px;">✅ RTI Confirmed — 81 contracts with full details (contractor, value, date)</span>
-    <span style="background:#fff3cd;color:#856404;font-weight:700;padding:4px 12px;border-radius:20px;">📋 MRH Official List — 10 roads authorized but contract details not yet public</span>
+    <span style="background:#dbeafe;color:#1e40af;font-weight:700;padding:4px 12px;border-radius:20px;">🏛️ GHA Official List — 54 contracts with full details (contractor, value, date, km)</span>
+    <span style="background:#fff3cd;color:#856404;font-weight:700;padding:4px 12px;border-radius:20px;">📋 MRH Pending — 6 roads authorized but contract details not yet public</span>
   </div>
   <div class="view-toggle">
     <button class="view-btn active" id="tableViewBtn" onclick="setView('table')">📋 Table</button>
@@ -481,8 +616,85 @@
   <div class="contacts-grid" id="contactsGrid"></div>
 </section>
 
+<!-- ALERTS -->
+<section id="alerts">
+  <div class="section-title">🚨 Public Alerts &amp; This Week in RoadWatch</div>
+  <div style="font-size:13px;color:var(--muted);margin-bottom:16px;">Emergencies and notable updates reported by citizens on this device, plus a live digest of the last 7 days. See something urgent? <a href="#" onclick="showDisasterModal();return false;" style="color:var(--red);font-weight:700;">Report it now →</a></div>
+  <div class="digest-grid" id="digestGrid"></div>
+  <div class="alerts-list" id="alertsList"></div>
+</section>
+
+<!-- COMMUNITY / REPUTATION -->
+<section id="community">
+  <div class="section-title">🏆 Community &amp; Reputation</div>
+  <div style="font-size:13px;color:var(--muted);margin-bottom:16px;">Citizens become the inspectors. Earn reputation points for reporting road status, adding verified detail, and flagging emergencies — climb the tiers below.</div>
+  <div class="profile-card">
+    <div class="profile-top">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div class="profile-badge-icon" id="profileBadgeIcon">🌱</div>
+        <div>
+          <div class="profile-tier-name" id="profileTierName">Newcomer</div>
+          <div class="profile-points" id="profilePoints">0 pts</div>
+        </div>
+      </div>
+      <div style="font-size:12px;opacity:.85;text-align:right;max-width:240px;" id="profileStatsText"></div>
+    </div>
+    <div class="profile-progress-track"><div class="profile-progress-fill" id="profileProgressFill" style="width:0%;"></div></div>
+    <div class="profile-progress-label" id="profileProgressLabel"></div>
+    <div class="name-input-row">
+      <input type="text" id="profileNameInput" placeholder="Set a display name for your reports (optional)">
+      <button onclick="saveProfileName()">Save</button>
+    </div>
+  </div>
+  <div style="background:#fff;border-radius:10px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.07);">
+    <div style="font-weight:700;margin-bottom:6px;">Reputation Tiers</div>
+    <table class="tier-table" id="tierTable"></table>
+    <p style="font-size:11px;color:#aaa;margin-top:14px;">Reputation is tracked on your device for this demo. A national leaderboard across all citizens requires user accounts and a backend (see Phase 2–3 of the roadmap) and isn't live yet — we won't show you a fake one.</p>
+  </div>
+</section>
+
+<!-- CONTRACTOR DIRECTORY -->
+<section id="contractors">
+  <div class="section-title">🏗️ Contractor Directory</div>
+  <div style="font-size:13px;color:var(--muted);margin-bottom:16px;">Every contractor awarded a Big Push contract, ranked by total contract value in this dataset. This is an award-history summary derived from disclosed contracts — not a completion or delay performance rating, since that data hasn't been publicly disclosed yet.</div>
+  <input type="text" class="search-box" id="contractorSearch" placeholder="Search contractors…" style="margin-bottom:16px;max-width:400px;">
+  <div class="contractor-grid" id="contractorGrid"></div>
+</section>
+
+<!-- OPEN DATA -->
+<section id="opendata">
+  <div class="section-title">📦 Open Data</div>
+  <div class="opendata-box">
+    <p style="font-size:13px;color:#333;line-height:1.6;">Every contract in this tracker is available for download and reuse — for researchers, journalists, and developers. Data is collated from the Ministry of Roads &amp; Highways' own official Big Push project list and authorization list. Free to reuse with attribution; RoadWatch Ghana adds no additional restrictions.</p>
+    <div class="opendata-btns">
+      <button class="btn-data" onclick="downloadJSON()">⬇️ Download JSON (<span id="ddCountJson">60</span> records)</button>
+      <button class="btn-data csv" onclick="downloadCSV()">⬇️ Download CSV</button>
+    </div>
+    <p style="font-size:11px;color:#aaa;">Fields: id, name, region, work_type, contractor, contractor_nationality, amount, currency, agency, award_date, est_completion, source, flags. Last updated: March 2026.</p>
+  </div>
+</section>
+
 <!-- ABOUT -->
 <section id="about">
+  <div class="section-title">🇬🇭 About RoadWatch Ghana</div>
+  <div style="background:var(--card);border-radius:10px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,.07);line-height:1.7;font-size:14px;color:#333;margin-bottom:20px;">
+    <p><strong>Mission.</strong> RoadWatch Ghana empowers every citizen to monitor public infrastructure projects by providing real-time, verified updates through community reporting, official data, and (in future phases) artificial intelligence.</p>
+    <br>
+    <p><strong>Vision.</strong> To become Ghana's largest public platform for tracking government infrastructure projects, increasing transparency, accountability, and citizen participation.</p>
+    <br>
+    <p><strong>Core Objectives</strong></p>
+    <ul style="margin-left:18px;margin-top:6px;">
+      <li>Increase transparency around how public money is spent on infrastructure</li>
+      <li>Reduce abandoned projects by keeping every contract visible</li>
+      <li>Encourage citizen participation in monitoring public works</li>
+      <li>Provide reliable, sourced information — not rumour</li>
+      <li>Help government agencies monitor contractor performance</li>
+      <li>Build public trust between citizens, contractors, and government</li>
+    </ul>
+    <br>
+    <p style="font-size:12px;color:var(--muted);">RoadWatch Ghana currently tracks roads with real, sourced contract data. Schools, Hospitals, Water, Energy, and Markets &amp; Public Buildings are part of the long-term roadmap (see the Ecosystem section above) and will only launch with real, verified project data — never placeholder figures.</p>
+  </div>
+
   <div class="section-title">📚 Learn More — Citizen's Guide to the Big Push</div>
   <div style="background:var(--card);border-radius:10px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,.07);line-height:1.7;font-size:14px;color:#333;">
 
@@ -518,40 +730,104 @@
     </ul>
     <br>
 
-    <p style="color:var(--muted);font-size:12px;"><strong>Data sources:</strong> Contract data obtained via Right to Information (RTI) requests published by <em>The Fourth Estate</em> (March 2026). Programme figures from Ghana Highway Authority (highways.gov.gh), Ministry of Roads &amp; Highways 2025 Budget (mofep.gov.gh), Daily Graphic, GBC Ghana, and Parliament records. This tracker shows 81 of 107 known Big Push contracts. Last updated: March 2026.</p>
+    <p style="color:var(--muted);font-size:12px;"><strong>Data sources:</strong> Contract data from the Ministry of Roads &amp; Highways' official "Full List of Big Push Infrastructure Programme" and MRH Big Push authorization list (mrh.gov.gh). Programme figures from Ghana Highway Authority (highways.gov.gh), Ministry of Roads &amp; Highways 2025 Budget (mofep.gov.gh), Daily Graphic, GBC Ghana, and Parliament records. This tracker shows 60 known Big Push contracts: 54 confirmed, 6 pending disclosure. Last updated: March 2026.</p>
   </div>
 </section>
 
 <footer>
-  <strong>Know Your Roads 🇬🇭</strong> — Ghana Big Push Road Tracker<br>
-  <span style="opacity:.9;margin-top:4px;display:block;">Built for every Ghanaian citizen · Share this page with your community · Data: GHA · URD · DFR via RTI</span>
-  <span style="font-size:11px;opacity:.6;margin-top:6px;display:block;">Independent education tool. Not affiliated with any government agency. Sources: The Fourth Estate · Ghana Highway Authority · Ministry of Roads and Highways · Parliament of Ghana.</span>
+  <strong>RoadWatch Ghana 🇬🇭</strong> — "See the Progress. Report the Truth."<br>
+  <span style="opacity:.9;margin-top:4px;display:block;">Built for every Ghanaian citizen · Share this page with your community · Data: GHA · URD · DFR</span>
+  <span style="font-size:11px;opacity:.6;margin-top:6px;display:block;">Independent citizen platform, formerly Know Your Roads Ghana. Not affiliated with any government agency. Sources: Ghana Highway Authority · Ministry of Roads and Highways · Parliament of Ghana. Community reports, reputation points, and alerts are generated by site visitors and stored on your own device — they are not verified government data.</span>
 </footer>
 
 <script>
-const RAW = {"contracts":[{"id":1,"name":"UPGRADING OF BEDIAKO JUNCTION - CAMP 15 - SEFWI ADABOKROM","date":"18-Sep-25","procurement":"SOLE SOURCING","contractor":"MM DELOVELY CO. LTD","currency":"GHS","amount":785083295.0,"region":"Western North","work_type":"Upgrading","agency":"Ghana Highway Authority","flags":"Duplicate road name"},{"id":2,"name":"REHABILITATION OF BEREKUM-SEIKWA ROAD","date":"12-Nov-25","procurement":"SOLE SOURCING","contractor":"J.A. ADOM LTD","currency":"GHS","amount":339830873.53,"region":"Bono","work_type":"Rehabilitation","agency":"Ghana Highway Authority","flags":""},{"id":3,"name":"REHABILITATION OF WENCHISAWLA ROAD","date":"12-Nov-25","procurement":"SOLE SOURCING","contractor":"M/S CIWE GHANA ENGINEERING LTD","currency":"GHS","amount":475345120.73,"region":"Bono/Savannah","work_type":"Rehabilitation","agency":"Ghana Highway Authority","flags":"Multi-contract (2 awards); Duplicate road name"},{"id":4,"name":"REHABILITATION OF WENCHISAWLA ROAD","date":"18-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S CIWE GHANA ENGINEERING LTD","currency":"GHS","amount":475345120.73,"region":"Bono/Savannah","work_type":"Rehabilitation","agency":"Ghana Highway Authority","flags":"Multi-contract (2 awards); Duplicate road name"},{"id":5,"name":"REHABILITATION OF TECHIMAN - NKONSIA - WENCHI ROAD","date":"29-Nov-25","procurement":"SOLE SOURCING","contractor":"VOLTA IMPEX","currency":"GHS","amount":1186772075.23,"region":"Bono","work_type":"Rehabilitation","agency":"Ghana Highway Authority","flags":""},{"id":6,"name":"REHABILITATION OF WENCHISAWLA ROAD","date":"29-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S POLY CHANGDA OVERSEAS ENG. CO. LTD","currency":"GHS","amount":423613808.58,"region":"Bono/Savannah","work_type":"Rehabilitation","agency":"Ghana Highway Authority","flags":"Multi-contract (2 awards); Duplicate road name"},{"id":7,"name":"REHABILITATION OF SELECTED ROADS IN AJUMAKO-ENYAN-ESSIAM DISTRICT","date":"18-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S MO & MO COMPANY LTD","currency":"GHS","amount":1665438095.87,"region":"Central","work_type":"Rehabilitation","agency":"Department of Feeder Roads","flags":"Multi-contract (2 awards)"},{"id":8,"name":"DUALISATION OF WINNEBA - CAPE COAST ROAD LOT 2","date":"29-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S M.A & CONSTANT COMPANY LTD","currency":"GHS","amount":1878011148.0,"region":"Central","work_type":"Dualisation","agency":"Ghana Highway Authority","flags":"Multi-contract (2 awards); Duplicate road name"},{"id":9,"name":"DUALISATION OF WINNEBA - CAPE COAST ROAD LOT 3","date":"29-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S M.A & CONSTANT COMPANY LTD","currency":"GHS","amount":3860486565.0,"region":"Central","work_type":"Dualisation","agency":"Ghana Highway Authority","flags":"High-value (>2B GHS); Multi-contract (2 awards); Duplicate road name"},{"id":10,"name":"REDEVELOPMENT OF WINNEBA - TAKORADI ROAD, DUALIZATION OF CAPE COAST - TAKORADI LOT 4","date":"29-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S S & L CONSTRUCTION & ENGINEERING LTD","currency":"GHS","amount":3104632933.0,"region":"Central/Western","work_type":"Dualisation","agency":"Ghana Highway Authority","flags":"High-value (>2B GHS); Multi-contract (2 awards); Duplicate road name"},{"id":11,"name":"CONSTRUCTION OF INTERCHANGE AT WINNEBA ROUNDABOUT; 10 NO. FOOTBRIDGES; AND DUALIZATION INTO WINNEBA AND SWEDRU TOWNS","date":"29-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S MO & MO COMPANY LTD","currency":"GHS","amount":1117001494.7,"region":"Central","work_type":"Construction","agency":"Ghana Highway Authority","flags":"Multi-contract (2 awards)"},{"id":12,"name":"REHABILITATION OF APAM-MUMFORD-HWEDA-DOGOOTUAM ROAD","date":"12-Oct-25","procurement":"SOLE SOURCING","contractor":"M/S TIMELINES INNOVATIONS COMPANY LTD","currency":"GHS","amount":227623963.6,"region":"Central","work_type":"Rehabilitation","agency":"Ghana Highway Authority","flags":"Multi-contract (3 awards)"},{"id":13,"name":"UPGRADING OF DAMANG - ATIEKU - TWIFO ANYINASE ROAD","date":"8-Jan-26","procurement":"SOLE SOURCING","contractor":"M/S DAVID WALTER LIMITED","currency":"GHS","amount":1046935549.45,"region":"Central","work_type":"Upgrading","agency":"Ghana Highway Authority","flags":""},{"id":14,"name":"REHABILITATION OF ATIMPOKU - ASIKUMA JUNCTION","date":"18-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S USSUYA (GH) LTD","currency":"GHS","amount":433745286.43,"region":"Eastern","work_type":"Rehabilitation","agency":"Ghana Highway Authority","flags":"Duplicate road name"},{"id":15,"name":"REHABILITATION OF TEMA - AFLAO ROAD","date":"15-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S FIRST SKY LTD","currency":"GHS","amount":1477093226.79,"region":"Greater Accra/Volta","work_type":"Rehabilitation","agency":"Ghana Highway Authority","flags":"Multi-contract (2 awards)"},{"id":16,"name":"RECONSTRUCTION OF DODOWA-AFIENYA-DAWHENYA ROAD & SELECTED TOWN ROADS","date":"15-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S OSWAL INVESTMENT LTD","currency":"GHS","amount":1116976732.05,"region":"Greater Accra","work_type":"Reconstruction","agency":"Ghana Highway Authority","flags":""},{"id":17,"name":"REHABILITATION OF GBINTRI - NAKPANDURI ROAD","date":"18-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S MAWUMS LTD","currency":"GHS","amount":1038241891.2,"region":"North East","work_type":"Rehabilitation","agency":"Ghana Highway Authority","flags":"Multi-contract (3 awards)"},{"id":18,"name":"UPGRADING OF KETIAJELI - KITARE ROAD","date":"8-Jan-26","procurement":"SOLE SOURCING","contractor":"M/S AKALIFA'S COMPANY LIMITED","currency":"GHS","amount":369320343.93,"region":"Northern","work_type":"Upgrading","agency":"Department of Feeder Roads","flags":""},{"id":19,"name":"UPGRADING OF KABONWULE - BLAJAI ROAD AND KP","date":"8-Jan-26","procurement":"SOLE SOURCING","contractor":"M/S AWERCO CONSTRUCTION LIMITED","currency":"GHS","amount":270399179.53,"region":"Northern","work_type":"Upgrading","agency":"Department of Feeder Roads","flags":""},{"id":20,"name":"UPGRADING OF SABOBA - CHEREPONI ROAD - LOT 1","date":"8-Jan-26","procurement":"SOLE SOURCING","contractor":"M/S FUZAK COMPANY LIMITED","currency":"GHS","amount":427767985.13,"region":"North East","work_type":"Upgrading","agency":"Ghana Highway Authority","flags":"Multi-contract (2 awards); Duplicate road name"},{"id":21,"name":"UPGRADING OF SABOBA - CHEREPONI ROAD - LOT 2","date":"8-Jan-26","procurement":"SOLE SOURCING","contractor":"M/S FUZAK COMPANY LIMITED","currency":"GHS","amount":316888260.48,"region":"North East","work_type":"Upgrading","agency":"Ghana Highway Authority","flags":"Multi-contract (2 awards); Duplicate road name"},{"id":22,"name":"UPGRADING OF EASTERN CORRIDOR ROAD (UPGRADING OF NKWANTA - OTI DAMANKO)","date":"12-Dec-25","procurement":"SOLE SOURCING","contractor":"CHINA JIANGXI INT. ECONOMIC & TECH. COOPERATION CO. LTD","currency":"GHS","amount":780178476.09,"region":"Oti","work_type":"Upgrading","agency":"Ghana Highway Authority","flags":"Multi-contract (2 awards)"},{"id":23,"name":"CONSTRUCTION OF DAMBAI BRIDGE","date":"29-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S MARIPOMA ENTERPRISE LTD","currency":"GHS","amount":3989560929.14,"region":"Oti","work_type":"Bridge Construction","agency":"Ghana Highway Authority","flags":"High-value (>2B GHS); Multi-contract (6 awards)"},{"id":24,"name":"RECONSTRUCTION OF NKWANTA - DAMBAI ROAD (INCLUDING TOWN ROADS)","date":"8-Jan-26","procurement":"SOLE SOURCING","contractor":"M/S EAGLE STAR ENTERPRISE LIMITED","currency":"GHS","amount":804824456.81,"region":"Oti","work_type":"Reconstruction","agency":"Ghana Highway Authority","flags":""},{"id":25,"name":"UPGRADING OF OKADJAKROM - KWAMIKROM ROAD","date":"8-Jan-26","procurement":"SOLE SOURCING","contractor":"M/S LIMERICA GHANA LIMITED","currency":"GHS","amount":324774367.94,"region":"Eastern","work_type":"Upgrading","agency":"Department of Feeder Roads","flags":""},{"id":26,"name":"REHABILITATION OF WENCHI - SAWLA INCLUDING TINGA TOWN ROADS","date":"18-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S CHINA RAILWAY NO.5 ENGINEERING GHANA LTD","currency":"GHS","amount":492409859.94,"region":"Bono/Savannah","work_type":"Rehabilitation","agency":"Ghana Highway Authority","flags":"Multi-contract (3 awards)"},{"id":27,"name":"REHABILITATION OF WENCHI - SAWLA","date":"18-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S CHINA RAILWAY NO.5 ENGINEERING GHANA LTD","currency":"GHS","amount":448383080.79,"region":"Bono/Savannah","work_type":"Rehabilitation","agency":"Ghana Highway Authority","flags":"Multi-contract (3 awards)"},{"id":28,"name":"REHABILITATION OF WENCHI SAWLA AND OTHERS","date":"18-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S MARIPOMA ENTERPRISE LTD","currency":"GHS","amount":861858834.26,"region":"Bono/Savannah","work_type":"Rehabilitation","agency":"Ghana Highway Authority","flags":"Multi-contract (6 awards)"},{"id":29,"name":"UPGRADING OF BOLE-MADARICHACHE ROAD AND OTHERS","date":"28-Oct-25","procurement":"SOLE SOURCING","contractor":"M/S MARIPOMA ENTERPRISE LTD","currency":"GHS","amount":649103309.06,"region":"Savannah","work_type":"Upgrading","agency":"Ghana Highway Authority","flags":"Multi-contract (6 awards)"},{"id":30,"name":"REHABILITATION OF WENCHISAWLA ROAD INCLUDING BAMBOI AND BANDA NKWANTA TOWN ROADS","date":"29-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S POLY CHANGDA OVERSEAS ENG. CO. LTD","currency":"GHS","amount":486405201.68,"region":"Bono/Savannah","work_type":"Rehabilitation","agency":"Ghana Highway Authority","flags":"Multi-contract (2 awards)"},{"id":31,"name":"CONSTRUCTION OF NATIONAL ROUTE N18 - WA - HAN ROAD","date":"11-Dec-25","procurement":"SOLE SOURCING","contractor":"P&W GHANEM LTD","currency":"GHS","amount":159447053.75,"region":"Upper West","work_type":"Construction","agency":"Ghana Highway Authority","flags":"Multi-contract (2 awards)"},{"id":32,"name":"UPGRADING OF WA - BULENGA - YAALA ROAD","date":"1-Aug-26","procurement":"SOLE SOURCING","contractor":"M/S ASTEE COMPANY LIMITED","currency":"GHS","amount":542044533.04,"region":"Upper West","work_type":"Upgrading","agency":"Ghana Highway Authority","flags":""},{"id":33,"name":"REHABILITATION OF ATIMPOKU - ASIKUMA JUNCTION","date":"29-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S DWAWILL LIMITED","currency":"GHS","amount":210843969.63,"region":"Eastern","work_type":"Rehabilitation","agency":"Ghana Highway Authority","flags":"Duplicate road name"},{"id":34,"name":"REHABILITATION OF ATIMPOKU - ASIKUMA -HODENU - AFLAO ROAD ASIKUMA-ANYIRAWASE SECTION","date":"29-Sep-25","procurement":"SOLE SOURCING","contractor":"ULTRANEXUS LIMITED","currency":"GHS","amount":634061351.78,"region":"Eastern/Volta","work_type":"Rehabilitation","agency":"Ghana Highway Authority","flags":""},{"id":35,"name":"RECONSTRUCTION OF ANYIRAWASI - HO TRITRINU, HO (GUINNESS DEPOT) - HO AIRPORT 2ND GATE","date":"15-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S FIRST SKY LTD","currency":"GHS","amount":1525609304.0,"region":"Volta","work_type":"Reconstruction","agency":"Ghana Highway Authority","flags":"Multi-contract (2 awards)"},{"id":36,"name":"REHABILITATION OF HO - KPETOE ROAD","date":"18-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S CHINA RAILWAY NO.5 ENGINEERING GHANA LTD","currency":"GHS","amount":976398063.1,"region":"Volta","work_type":"Rehabilitation","agency":"Ghana Highway Authority","flags":"Multi-contract (3 awards)"},{"id":37,"name":"REHABILITATION OF KPETOE - AVEAFIADENYIGBA ROAD INCLUDING ZIOPE TOWNS ROADS","date":"18-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S ROLIDER GHANA LTD","currency":"GHS","amount":545928621.25,"region":"Volta","work_type":"Rehabilitation","agency":"Ghana Highway Authority","flags":"Multi-contract (3 awards); Duplicate road name"},{"id":38,"name":"REHABILITATION OF KPETOE - AVEAFIADENYIGBA ROAD INCLUDING ZIOPE TOWNS ROADS","date":"18-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S TIMELINES INNOVATIONS COMPANY LTD","currency":"GHS","amount":250302362.02,"region":"Volta","work_type":"Rehabilitation","agency":"Ghana Highway Authority","flags":"Multi-contract (3 awards); Duplicate road name"},{"id":39,"name":"REHABILITATION OF PENYI - AFLAO","date":"18-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S MEDMO COMPANY LTD","currency":"GHS","amount":537999204.14,"region":"Volta","work_type":"Rehabilitation","agency":"Ghana Highway Authority","flags":""},{"id":40,"name":"REHABILITATION OF AFIADENYIGBA - PENYI ROAD - INCLUDING INTERNAL LINK ROADS WITHIN DZODZE AND PENYI TOWNSHIP LOT 8A","date":"28-Nov-25","procurement":"SOLE SOURCING","contractor":"M/S TIMELINES INNOVATIONS COMPANY LTD","currency":"GHS","amount":367904784.34,"region":"Volta","work_type":"Rehabilitation","agency":"Ghana Highway Authority","flags":"Multi-contract (3 awards)"},{"id":41,"name":"UPGRADING OF ADAKLUTSR EFE-WAYA-KAYIME ROAD AND ABUADI - KODIABE ROAD","date":"17-Dec-25","procurement":"SOLE SOURCING","contractor":"M/S ROLIDER GHANA LTD","currency":"GHS","amount":468949757.2,"region":"Volta","work_type":"Upgrading","agency":"Ghana Highway Authority","flags":"Multi-contract (3 awards)"},{"id":42,"name":"REDEVELOPMENT OF WINNEBA - TAKORADI ROAD, DUALIZATION OF CAPE COAST - TAKORADI LOT 5","date":"29-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S ALKYRO JULES LIMITED COMPANY","currency":"GHS","amount":2509998661.0,"region":"Central/Western","work_type":"Dualisation","agency":"Ghana Highway Authority","flags":"High-value (>2B GHS); Duplicate road name"},{"id":43,"name":"REDEVELOPMENT OF WINNEBA - TAKORADI ROAD, DUALIZATION OF CAPE COAST - TAKORADI LOT 6","date":"29-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S S & L CONSTRUCTION & ENGINEERING LTD","currency":"GHS","amount":3323232152.0,"region":"Western","work_type":"Dualisation","agency":"Ghana Highway Authority","flags":"High-value (>2B GHS); Multi-contract (2 awards); Duplicate road name"},{"id":44,"name":"UPGRADING OF BEDIAKO JUNCTION - CAMP 15 - SEFWI ADABOKROM","date":"18-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S KINGSPOK CONSTRUCTION LTD","currency":"GHS","amount":135594474.05,"region":"Western North","work_type":"Upgrading","agency":"Ghana Highway Authority","flags":"Multi-contract (2 awards); Duplicate road name"},{"id":45,"name":"CONSTRUCTION OF ENCHI - ELUBO ROAD","date":"29-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S TOP INTERNATIONAL ENG. GH. LTD","currency":"GHS","amount":1414219012.69,"region":"Western","work_type":"Construction","agency":"Ghana Highway Authority","flags":""},{"id":46,"name":"CONSTRUCTION OF DADIESO - AKONTOMBRA ROAD","date":"29-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S KINGSPOK CONSTRUCTION LTD","currency":"GHS","amount":816744717.14,"region":"Western North","work_type":"Construction","agency":"Ghana Highway Authority","flags":"Multi-contract (2 awards)"},{"id":47,"name":"UPGRADING OF ADWOFUAOSEIKOJOKROM ROAD","date":"18-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S CYMAIN GH LTD","currency":"GHS","amount":390077209.0,"region":"Western North","work_type":"Upgrading","agency":"Department of Feeder Roads","flags":""},{"id":48,"name":"UPGRADING OF ENCHI - KUDJOURU - PEKYI","date":"18-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S MARIPOMA ENTERPRISE LTD","currency":"GHS","amount":410236050.39,"region":"Western North","work_type":"Upgrading","agency":"Ghana Highway Authority","flags":"Multi-contract (6 awards); Duplicate road name"},{"id":49,"name":"UPGRADING OF ENCHI - KUDJOURU - PEKYI","date":"18-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S BIG AIDOO CONSTRUCTION LTD","currency":"GHS","amount":469040715.45,"region":"Western North","work_type":"Upgrading","agency":"Ghana Highway Authority","flags":"Duplicate road name"},{"id":50,"name":"REHABILITATION OF WASAWLA ROAD AND CONSTRUCTION OF DUAL CARRIAGEWAY","date":"29-Nov-25","procurement":"SOLE SOURCING","contractor":"M/S MARIPOMA ENTERPRISE LTD","currency":"GHS","amount":2306166134.6,"region":"Western North","work_type":"Rehabilitation/Construction","agency":"Ghana Highway Authority","flags":"High-value (>2B GHS); Multi-contract (6 awards)"},{"id":51,"name":"REHABILITATION OF ESSIAM-TELEKUBOKAZO-ANIBEN JUNCTION ROAD - LOT 3","date":"30-Dec-25","procurement":"SOLE SOURCING","contractor":"MESSRS MEMPHIS METROPOLITAN LTD","currency":"GHS","amount":232550433.09,"region":"Central","work_type":"Rehabilitation","agency":"Ghana Highway Authority","flags":"Multi-contract (2 awards); Duplicate road name"},{"id":52,"name":"REHABILITATION OF ESSIAM-TELEKUBOKAZO-ANYINASE ROAD - LOT 6","date":"30-Dec-25","procurement":"SOLE SOURCING","contractor":"MESSRS MEMPHIS METROPOLITAN LTD","currency":"GHS","amount":444615011.59,"region":"Central","work_type":"Rehabilitation","agency":"Ghana Highway Authority","flags":"Multi-contract (2 awards); Duplicate road name"},{"id":53,"name":"UPGRADING OF ASIKUMA-KPALIME ROAD","date":"30-Dec-25","procurement":"SOLE SOURCING","contractor":"MESSRS RELIANCE LOGISTICS CONSTRUCTION LTD","currency":"GHS","amount":258170435.58,"region":"Central","work_type":"Upgrading","agency":"Ghana Highway Authority","flags":""},{"id":54,"name":"REHABILITATION OF MANKESSIM-AJUMAKO AGONA SWEDRU ROAD AND OTHERS","date":"30-Dec-25","procurement":"SOLE SOURCING","contractor":"E-SPEEDWAY CONSTRUCTION LTD","currency":"GHS","amount":2890514550.0,"region":"Central","work_type":"Rehabilitation","agency":"Ghana Highway Authority","flags":"High-value (>2B GHS)"},{"id":55,"name":"REHABILITATION OF SUNYANI - ATRONIE ROAD AND REHABILITATION OF SUNYANI - ATRONIE JUNCTION-ACHERENSUA ROAD","date":"26-Sep-25","procurement":"SOLE SOURCING","contractor":"MESSRS ALEXIBOAM COMPANY LIMITED","currency":"GHS","amount":946191558.3,"region":"Bono","work_type":"Rehabilitation","agency":"Ghana Highway Authority","flags":""},{"id":56,"name":"UPGRADING OF TUMU-HANLAWRA ROAD","date":"17-Dec-25","procurement":"SOLE SOURCING","contractor":"MESSRS GHANHALI COMPANY LIMITED","currency":"GHS","amount":207969054.78,"region":"Upper West","work_type":"Upgrading","agency":"Ghana Highway Authority","flags":""},{"id":57,"name":"UPGRADING OF AKRODIE-SAYERASO ROAD","date":"1-Aug-25","procurement":"SOLE SOURCING","contractor":"M/S TOWN AND CONCRETE PROPERTIES LTD","currency":"GHS","amount":453143852.21,"region":"Ashanti","work_type":"Upgrading","agency":"Department of Feeder Roads","flags":""},{"id":58,"name":"CONSTRUCTION OF ADAWSO BRIDGE","date":"30-Dec-25","procurement":"SOLE SOURCING","contractor":"SCL SONITRA CONSTRUCTION LIMITED","currency":"USD","amount":497664217.34,"region":"Eastern","work_type":"Bridge Construction","agency":"Ghana Highway Authority","flags":"USD-denominated"},{"id":59,"name":"CONSTRUCTION OF 3RD RING ROAD, TAMALE PHASE 1 - LOT 1","date":"2-Sep-25","procurement":"SOLE SOURCING","contractor":"CHINA RAILWAY NO.5 ENGINEERING (GH) LIMITED","currency":"GHS","amount":873575035.81,"region":"Northern","work_type":"Construction","agency":"Ghana Highway Authority","flags":"Duplicate road name"},{"id":60,"name":"CONSTRUCTION OF 3RD RING ROAD, TAMALE PHASE 1 - LOT 2","date":"2-Sep-25","procurement":"SOLE SOURCING","contractor":"SINOHYDRO CORPORATION LIMITED","currency":"GHS","amount":873575035.81,"region":"Northern","work_type":"Construction","agency":"Ghana Highway Authority","flags":"Duplicate road name"},{"id":61,"name":"CONSTRUCTION OF 3RD RING ROAD, TAMALE PHASE 1 - LOT 3","date":"2-Sep-25","procurement":"SOLE SOURCING","contractor":"MUNISCO LIMITED","currency":"GHS","amount":875018805.82,"region":"Northern","work_type":"Construction","agency":"Ghana Highway Authority","flags":"Duplicate road name"},{"id":62,"name":"CONSTRUCTION OF SUNYANI OUTER RING - LOT 1","date":"2-Sep-25","procurement":"SOLE SOURCING","contractor":"KOFI JOB CO. LTD","currency":"GHS","amount":995611392.11,"region":"Bono","work_type":"Construction","agency":"Ghana Highway Authority","flags":"Multi-contract (3 awards); Duplicate road name"},{"id":63,"name":"CONSTRUCTION OF SUNYANI OUTER RING - LOT 2","date":"2-Sep-25","procurement":"SOLE SOURCING","contractor":"KOFI JOB CO. LTD","currency":"GHS","amount":997973892.11,"region":"Bono","work_type":"Construction","agency":"Ghana Highway Authority","flags":"Multi-contract (3 awards); Duplicate road name"},{"id":64,"name":"CONSTRUCTION OF KUMASI OUTER RING ROAD - LOT 1","date":"20-Nov-25","procurement":"SOLE SOURCING","contractor":"ARAB CONTRACTORS GHANA LIMITED","currency":"GHS","amount":1029969450.51,"region":"Ashanti","work_type":"Construction","agency":"Ghana Highway Authority","flags":"Multi-contract (3 awards); Duplicate road name"},{"id":65,"name":"CONSTRUCTION OF KUMASI OUTER RING ROAD - LOT 2","date":"20-Nov-25","procurement":"SOLE SOURCING","contractor":"ARAB CONTRACTORS GHANA LIMITED","currency":"GHS","amount":1029969450.51,"region":"Ashanti","work_type":"Construction","agency":"Ghana Highway Authority","flags":"Multi-contract (3 awards); Duplicate road name"},{"id":66,"name":"CONSTRUCTION OF KUMASI OUTER RING ROAD - LOT 3","date":"20-Nov-25","procurement":"SOLE SOURCING","contractor":"ARAB CONTRACTORS GHANA LIMITED","currency":"GHS","amount":1031413200.51,"region":"Ashanti","work_type":"Construction","agency":"Ghana Highway Authority","flags":"Multi-contract (3 awards); Duplicate road name"},{"id":67,"name":"REHABILITATION OF KOMENDA TOWN ROADS, KOMENDA, PHASE 2","date":"2-Sep-25","procurement":"SOLE SOURCING","contractor":"KINGSPOK COMPANY LIMITED","currency":"GHS","amount":51356118.23,"region":"Central","work_type":"Rehabilitation","agency":"Urban Roads Department","flags":""},{"id":68,"name":"REHABILITATION OF SELECTED ROADS IN ACCRA EAST","date":"2-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S OSWAL INVESTMENTS","currency":"GHS","amount":100976814.62,"region":"Greater Accra","work_type":"Rehabilitation","agency":"Urban Roads Department","flags":""},{"id":69,"name":"REHABILITATION OF EGUASEN-KANFOA ROADS AND AMOSIMA TOWN ROADS","date":"2-Sep-25","procurement":"SOLE SOURCING","contractor":"HALFAST LIMITED","currency":"GHS","amount":65892941.64,"region":"Ashanti","work_type":"Rehabilitation","agency":"Urban Roads Department","flags":""},{"id":70,"name":"UPGRADING OF TODOME-TOH KPALIME - DZEMENI FEEDER ROAD AND DZEMENI TOWN ROADS","date":"17-Sep-25","procurement":"SOLE SOURCING","contractor":"M/S SANAM (GH) LIMITED","currency":"GHS","amount":300291294.94,"region":"Volta","work_type":"Upgrading","agency":"Department of Feeder Roads","flags":""},{"id":71,"name":"REHABILITATION OF TEPA (MABANG) - GOASO ROAD","date":"12-Oct-25","procurement":"SOLE SOURCING","contractor":"KOFI JOB CO. LTD","currency":"GHS","amount":554679293.69,"region":"Ahafo","work_type":"Rehabilitation","agency":"Ghana Highway Authority","flags":"Multi-contract (3 awards)"},{"id":72,"name":"RECONSTRUCTION OF JINIJINI - SAMPA ROAD PROJECT","date":"12-Nov-25","procurement":"SOLE SOURCING","contractor":"RANGO CONSULTIUM LTD.","currency":"GHS","amount":1658985244.53,"region":"Bono","work_type":"Reconstruction","agency":"Ghana Highway Authority","flags":""},{"id":73,"name":"UPGRADING OF NKWANTA - OTI DAMANKO","date":"12-Dec-25","procurement":"SOLE SOURCING","contractor":"CHINA JIANGXI INT. ECONOMIC & TECH. COOPERATION CO. LTD","currency":"GHS","amount":225221769.02,"region":"Oti","work_type":"Upgrading","agency":"Ghana Highway Authority","flags":"Multi-contract (2 awards)"},{"id":74,"name":"UPGRADING OF TUMU - SISSILI - NAVRONGO ROAD","date":"10-Dec-25","procurement":"SOLE SOURCING","contractor":"M/S MAWUMS LTD","currency":"GHS","amount":254180205.58,"region":"Upper West/Upper East","work_type":"Upgrading","agency":"Ghana Highway Authority","flags":"Multi-contract (3 awards)"},{"id":75,"name":"UPGRADING OF TUMU - CHUCHULIGA - NAVRONGO INCLUDING CONSTRUCTION OF 36M SPAN RC BRIDGE OVER KANYIGBE RIVER AND 24M SPAN RC BRIDGE OVER BECHELIHU RIVER","date":"10-Dec-25","procurement":"SOLE SOURCING","contractor":"M/S MAWUMS LTD","currency":"GHS","amount":598002009.04,"region":"Upper West/Upper East","work_type":"Upgrading/Bridge","agency":"Ghana Highway Authority","flags":"Multi-contract (3 awards)"},{"id":76,"name":"PARTIAL RECONSTRUCTION OF NAVRONGO - TUMU ROAD; INCLUDING PARTIAL RECONSTRUCTION OF NAVRONGO CHUCHULIGA - SANDEMA ROAD","date":"12-Nov-25","procurement":"SOLE SOURCING","contractor":"MYTURN LTD","currency":"GHS","amount":469711150.35,"region":"Upper East/Upper West","work_type":"Reconstruction","agency":"Ghana Highway Authority","flags":""},{"id":77,"name":"UPGRADING OF TUMU - HAN - LAWRA ROAD 1","date":"11-Dec-25","procurement":"SOLE SOURCING","contractor":"M/S MARIPOMA ENTERPRISE LTD","currency":"GHS","amount":90639575.32,"region":"Upper West","work_type":"Upgrading","agency":"Ghana Highway Authority","flags":"Multi-contract (6 awards)"},{"id":78,"name":"UPGRADING OF TUMU - HAN - LAWRA ROAD 2","date":"11-Dec-25","procurement":"SOLE SOURCING","contractor":"GREENHOUSE INT. DEV. GH. GLTD","currency":"GHS","amount":173233182.94,"region":"Upper West","work_type":"Upgrading","agency":"Ghana Highway Authority","flags":"Multi-contract (2 awards)"},{"id":79,"name":"UPGRADING OF TUMU - HAN - LAWRA ROAD 3","date":"11-Dec-25","procurement":"SOLE SOURCING","contractor":"P&W GHANEM LTD","currency":"GHS","amount":421701612.5,"region":"Upper West","work_type":"Upgrading","agency":"Ghana Highway Authority","flags":"Multi-contract (2 awards)"},{"id":80,"name":"REHABILITATION OF HOHOE - JASIKAN","date":"12-Nov-25","procurement":"SOLE SOURCING","contractor":"M/S ROLIDER GHANA LTD","currency":"GHS","amount":489359153.2,"region":"Volta","work_type":"Rehabilitation","agency":"Ghana Highway Authority","flags":"Multi-contract (3 awards)"},{"id":81,"name":"RECONSTRUCTION OF HAVE - HOHOE","date":"12-Nov-25","procurement":"SOLE SOURCING","contractor":"GREENHOUSE INT. DEV. GH. GLTD","currency":"GHS","amount":811330915.08,"region":"Volta","work_type":"Reconstruction","agency":"Ghana Highway Authority","flags":"Multi-contract (2 awards)"}],"regions":[{"region":"Central","count":11,"total_ghs":13672703365.11},{"region":"Volta","count":10,"total_ghs":6274073459.27},{"region":"Bono","count":6,"total_ghs":6125365035.81},{"region":"Oti","count":4,"total_ghs":5799785631.06},{"region":"Central/Western","count":2,"total_ghs":5614631594.0},{"region":"Western North","count":7,"total_ghs":5312942595.63},{"region":"Western","count":2,"total_ghs":4737451164.69},{"region":"Bono/Savannah","count":7,"total_ghs":3663361026.71},{"region":"Ashanti","count":5,"total_ghs":3610388895.38},{"region":"Northern","count":5,"total_ghs":3261888400.9},{"region":"North East","count":3,"total_ghs":1782898136.81},{"region":"Upper West","count":6,"total_ghs":1595035012.33},{"region":"Greater Accra/Volta","count":1,"total_ghs":1477093226.79},{"region":"Greater Accra","count":2,"total_ghs":1217953546.67},{"region":"Eastern","count":4,"total_ghs":969363624.0},{"region":"Upper West/Upper East","count":2,"total_ghs":852182214.62},{"region":"Savannah","count":1,"total_ghs":649103309.06},{"region":"Eastern/Volta","count":1,"total_ghs":634061351.78},{"region":"Ahafo","count":1,"total_ghs":554679293.69},{"region":"Upper East/Upper West","count":1,"total_ghs":469711150.35}],"contractors":[{"name":"M/S MARIPOMA ENTERPRISE LTD","count":6,"total_ghs":8307564832.77},{"name":"M/S S & L CONSTRUCTION & ENGINEERING LTD","count":2,"total_ghs":6427865085.0},{"name":"M/S M.A & CONSTANT COMPANY LTD","count":2,"total_ghs":5738497713.0},{"name":"ARAB CONTRACTORS GHANA LIMITED","count":3,"total_ghs":3091352101.53},{"name":"M/S FIRST SKY LTD","count":2,"total_ghs":3002702530.79},{"name":"E-SPEEDWAY CONSTRUCTION LTD","count":1,"total_ghs":2890514550.0},{"name":"M/S MO & MO COMPANY LTD","count":2,"total_ghs":2782439590.57},{"name":"KOFI JOB CO. LTD","count":3,"total_ghs":2548264577.91},{"name":"M/S ALKYRO JULES LIMITED COMPANY","count":1,"total_ghs":2509998661.0},{"name":"M/S CHINA RAILWAY NO.5 ENGINEERING GHANA LTD","count":3,"total_ghs":1917191003.83},{"name":"M/S MAWUMS LTD","count":3,"total_ghs":1890424105.82},{"name":"RANGO CONSULTIUM LTD.","count":1,"total_ghs":1658985244.53},{"name":"M/S ROLIDER GHANA LTD","count":3,"total_ghs":1504237531.65},{"name":"M/S TOP INTERNATIONAL ENG. GH. LTD","count":1,"total_ghs":1414219012.69},{"name":"VOLTA IMPEX","count":1,"total_ghs":1186772075.23},{"name":"M/S OSWAL INVESTMENT LTD","count":1,"total_ghs":1116976732.05},{"name":"M/S DAVID WALTER LIMITED","count":1,"total_ghs":1046935549.45},{"name":"CHINA JIANGXI INT. ECONOMIC & TECH. COOPERATION CO. LTD","count":2,"total_ghs":1005400245.11},{"name":"GREENHOUSE INT. DEV. GH. GLTD","count":2,"total_ghs":984564098.02},{"name":"M/S KINGSPOK CONSTRUCTION LTD","count":2,"total_ghs":952339191.19},{"name":"M/S CIWE GHANA ENGINEERING LTD","count":2,"total_ghs":950690241.46},{"name":"MESSRS ALEXIBOAM COMPANY LIMITED","count":1,"total_ghs":946191558.3},{"name":"M/S POLY CHANGDA OVERSEAS ENG. CO. LTD","count":2,"total_ghs":910019010.26},{"name":"MUNISCO LIMITED","count":1,"total_ghs":875018805.82},{"name":"CHINA RAILWAY NO.5 ENGINEERING (GH) LIMITED","count":1,"total_ghs":873575035.81},{"name":"SINOHYDRO CORPORATION LIMITED","count":1,"total_ghs":873575035.81},{"name":"M/S TIMELINES INNOVATIONS COMPANY LTD","count":3,"total_ghs":845831109.96},{"name":"M/S EAGLE STAR ENTERPRISE LIMITED","count":1,"total_ghs":804824456.81},{"name":"MM DELOVELY CO. LTD","count":1,"total_ghs":785083295.0},{"name":"M/S FUZAK COMPANY LIMITED","count":2,"total_ghs":744656245.61},{"name":"MESSRS MEMPHIS METROPOLITAN LTD","count":2,"total_ghs":677165444.68},{"name":"ULTRANEXUS LIMITED","count":1,"total_ghs":634061351.78},{"name":"P&W GHANEM LTD","count":2,"total_ghs":581148666.25},{"name":"M/S ASTEE COMPANY LIMITED","count":1,"total_ghs":542044533.04},{"name":"M/S MEDMO COMPANY LTD","count":1,"total_ghs":537999204.14},{"name":"SCL SONITRA CONSTRUCTION LIMITED","count":1,"total_ghs":0},{"name":"MYTURN LTD","count":1,"total_ghs":469711150.35},{"name":"M/S BIG AIDOO CONSTRUCTION LTD","count":1,"total_ghs":469040715.45},{"name":"M/S TOWN AND CONCRETE PROPERTIES LTD","count":1,"total_ghs":453143852.21},{"name":"M/S USSUYA (GH) LTD","count":1,"total_ghs":433745286.43},{"name":"M/S CYMAIN GH LTD","count":1,"total_ghs":390077209.0},{"name":"M/S AKALIFA'S COMPANY LIMITED","count":1,"total_ghs":369320343.93},{"name":"J.A. ADOM LTD","count":1,"total_ghs":339830873.53},{"name":"M/S LIMERICA GHANA LIMITED","count":1,"total_ghs":324774367.94},{"name":"M/S SANAM (GH) LIMITED","count":1,"total_ghs":300291294.94},{"name":"M/S AWERCO CONSTRUCTION LIMITED","count":1,"total_ghs":270399179.53},{"name":"MESSRS RELIANCE LOGISTICS CONSTRUCTION LTD","count":1,"total_ghs":258170435.58},{"name":"M/S DWAWILL LIMITED","count":1,"total_ghs":210843969.63},{"name":"MESSRS GHANHALI COMPANY LIMITED","count":1,"total_ghs":207969054.78},{"name":"M/S OSWAL INVESTMENTS","count":1,"total_ghs":100976814.62},{"name":"HALFAST LIMITED","count":1,"total_ghs":65892941.64},{"name":"KINGSPOK COMPANY LIMITED","count":1,"total_ghs":51356118.23}]};
-
-// ─── DATA SETUP ────────────────────────────────────────────────
-// Tag existing RTI contracts with source
-RAW.contracts.forEach(c => { c.source = 'RTI Data'; c.flags = c.flags || ''; });
-
-// ─── ADDITIONAL ROADS from official MRH Big Push authorization list
-// (mrh.gov.gh, Sep 2025) — contract details pending public disclosure
-const MRH_EXTRA = [
+// ─── GHA OFFICIAL DATA SOURCE ───────────────────────────────────
+// Sole data source for this tracker: the Ministry of Roads & Highways'
+// own "Full List of Big Push Infrastructure Programme" (54 projects,
+// with real per-contract kilometre lengths), merged with the MRH Big
+// Push authorization list for projects still awaiting full contract
+// disclosure. No RTI / third-party FOI data is used.
+const GHA_OFFICIAL = [
+  {id:1, name:"UPGRADING OF BEDIAKO JUNCTION - CAMP 15 - SEFWI ADABOKROM", date:"15-Sep-25", procurement:"SOLE SOURCING", contractor:"MM DELOVELY CO. LTD", currency:"GHS", amount:785083295.0, region:"Ahafo", work_type:"Upgrading", agency:"Ghana Highway Authority", flags:"Duplicate road name", km:55, source:"GHA Official List"},
+  {id:3, name:"REHABILITATION OF WENCHISAWLA ROAD", date:"12-Nov-25", procurement:"SOLE SOURCING", contractor:"M/S CIWE GHANA ENGINEERING LTD", currency:"GHS", amount:475345120.73, region:"Bono/Savannah", work_type:"Rehabilitation", agency:"Ghana Highway Authority", flags:"Multi-contract (2 awards); Duplicate road name", km:25, source:"GHA Official List"},
+  {id:4, name:"REHABILITATION OF WENCHISAWLA ROAD", date:"18-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S CIWE GHANA ENGINEERING LTD", currency:"GHS", amount:475345120.73, region:"Bono/Savannah", work_type:"Rehabilitation", agency:"Ghana Highway Authority", flags:"Multi-contract (2 awards); Duplicate road name", km:25, source:"GHA Official List"},
+  {id:5, name:"REHABILITATION OF TECHIMAN - NKONSIA - WENCHI ROAD", date:"29-Nov-25", procurement:"SOLE SOURCING", contractor:"VOLTA IMPEX", currency:"GHS", amount:1186772075.23, region:"Bono", work_type:"Rehabilitation", agency:"Ghana Highway Authority", flags:"", km:32.6, source:"GHA Official List"},
+  {id:6, name:"REHABILITATION OF WENCHISAWLA ROAD", date:"29-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S POLY CHANGDA OVERSEAS ENG. CO. LTD", currency:"GHS", amount:423613808.58, region:"Savannah", work_type:"Rehabilitation", agency:"Ghana Highway Authority", flags:"Multi-contract (2 awards); Duplicate road name", km:25, source:"GHA Official List"},
+  {id:8, name:"DUALISATION OF WINNEBA - CAPE COAST ROAD LOT 2", date:"29-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S M.A & CONSTANT COMPANY LTD", currency:"GHS", amount:1878011148.0, region:"Central", work_type:"Dualisation", agency:"Ghana Highway Authority", flags:"Multi-contract (2 awards); Duplicate road name", km:24, source:"GHA Official List"},
+  {id:9, name:"DUALISATION OF WINNEBA - CAPE COAST ROAD LOT 3", date:"29-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S M.A & CONSTANT COMPANY LTD", currency:"GHS", amount:3860486565.0, region:"Central", work_type:"Dualisation", agency:"Ghana Highway Authority", flags:"High-value (>2B GHS); Multi-contract (2 awards); Duplicate road name", km:25, source:"GHA Official List"},
+  {id:10, name:"REDEVELOPMENT OF WINNEBA - TAKORADI ROAD, DUALIZATION OF CAPE COAST - TAKORADI LOT 4", date:"29-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S S & L CONSTRUCTION & ENGINEERING LTD", currency:"GHS", amount:3104632933.0, region:"Central", work_type:"Dualisation", agency:"Ghana Highway Authority", flags:"High-value (>2B GHS); Multi-contract (2 awards); Duplicate road name", km:25, source:"GHA Official List"},
+  {id:11, name:"CONSTRUCTION OF INTERCHANGE AT WINNEBA ROUNDABOUT; 10 NO. FOOTBRIDGES; AND DUALIZATION INTO WINNEBA AND SWEDRU TOWNS", date:"29-Aug-25", procurement:"SOLE SOURCING", contractor:"M/S MO & MO COMPANY LTD", currency:"GHS", amount:1117001494.7, region:"Central", work_type:"Construction", agency:"Ghana Highway Authority", flags:"Multi-contract (2 awards)", km:null, source:"GHA Official List"},
+  {id:14, name:"REHABILITATION OF ATIMPOKU - ASIKUMA JUNCTION", date:"18-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S USSUYA (GH) LTD", currency:"GHS", amount:433745286.43, region:"Eastern/Volta", work_type:"Rehabilitation", agency:"Ghana Highway Authority", flags:"Duplicate road name", km:17.5, source:"GHA Official List"},
+  {id:15, name:"REHABILITATION OF TEMA - AFLAO ROAD", date:"15-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S FIRST SKY LTD", currency:"GHS", amount:1477093226.79, region:"Greater Accra", work_type:"Rehabilitation", agency:"Ghana Highway Authority", flags:"Multi-contract (2 awards)", km:17.3, source:"GHA Official List"},
+  {id:16, name:"RECONSTRUCTION OF DODOWA-AFIENYA-DAWHENYA ROAD & SELECTED TOWN ROADS", date:"15-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S OSWAL INVESTMENT LTD", currency:"GHS", amount:1116976732.05, region:"Greater Accra", work_type:"Reconstruction", agency:"Ghana Highway Authority", flags:"", km:27.8, source:"GHA Official List"},
+  {id:17, name:"REHABILITATION OF GBINTRI - NAKPANDURI ROAD", date:"18-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S MAWUMS LTD", currency:"GHS", amount:1038241891.2, region:"North East", work_type:"Rehabilitation", agency:"Ghana Highway Authority", flags:"Multi-contract (3 awards)", km:14, source:"GHA Official List"},
+  {id:23, name:"CONSTRUCTION OF DAMBAI BRIDGE", date:"29-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S MARIPOMA ENTERPRISE LTD", currency:"GHS", amount:3989560929.14, region:"Oti", work_type:"Bridge Construction", agency:"Ghana Highway Authority", flags:"High-value (>2B GHS); Multi-contract (6 awards)", km:null, source:"GHA Official List"},
+  {id:26, name:"REHABILITATION OF WENCHI - SAWLA INCLUDING TINGA TOWN ROADS", date:"18-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S CHINA RAILWAY NO.5 ENGINEERING GHANA LTD", currency:"GHS", amount:492409859.94, region:"Savannah", work_type:"Rehabilitation", agency:"Ghana Highway Authority", flags:"Multi-contract (3 awards)", km:28, source:"GHA Official List"},
+  {id:27, name:"REHABILITATION OF WENCHI - SAWLA", date:"18-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S CHINA RAILWAY NO.5 ENGINEERING GHANA LTD", currency:"GHS", amount:448383080.79, region:"Savannah", work_type:"Rehabilitation", agency:"Ghana Highway Authority", flags:"Multi-contract (3 awards)", km:25, source:"GHA Official List"},
+  {id:28, name:"REHABILITATION OF WENCHI SAWLA AND OTHERS", date:"18-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S MARIPOMA ENTERPRISE LTD", currency:"GHS", amount:861858834.26, region:"Savannah", work_type:"Rehabilitation", agency:"Ghana Highway Authority", flags:"Multi-contract (6 awards)", km:45, source:"GHA Official List"},
+  {id:30, name:"REHABILITATION OF WENCHISAWLA ROAD INCLUDING BAMBOI AND BANDA NKWANTA TOWN ROADS", date:"29-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S POLY CHANGDA OVERSEAS ENG. CO. LTD", currency:"GHS", amount:486405201.68, region:"Savannah", work_type:"Rehabilitation", agency:"Ghana Highway Authority", flags:"Multi-contract (2 awards)", km:30, source:"GHA Official List"},
+  {id:33, name:"REHABILITATION OF ATIMPOKU - ASIKUMA JUNCTION", date:"29-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S DWAWILL LIMITED", currency:"GHS", amount:210843969.63, region:"Volta", work_type:"Rehabilitation", agency:"Ghana Highway Authority", flags:"Duplicate road name", km:8.5, source:"GHA Official List"},
+  {id:34, name:"REHABILITATION OF ATIMPOKU - ASIKUMA -HODENU - AFLAO ROAD ASIKUMA-ANYIRAWASE SECTION", date:"29-Sep-25", procurement:"SOLE SOURCING", contractor:"ULTRANEXUS LIMITED", currency:"GHS", amount:634061351.78, region:"Volta", work_type:"Rehabilitation", agency:"Ghana Highway Authority", flags:"", km:23.4, source:"GHA Official List"},
+  {id:35, name:"RECONSTRUCTION OF ANYIRAWASI - HO TRITRINU, HO (GUINNESS DEPOT) - HO AIRPORT 2ND GATE", date:"15-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S FIRST SKY LTD", currency:"GHS", amount:1525609304.0, region:"Volta", work_type:"Reconstruction", agency:"Ghana Highway Authority", flags:"Multi-contract (2 awards)", km:20.6, source:"GHA Official List"},
+  {id:36, name:"REHABILITATION OF HO - KPETOE ROAD", date:"18-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S CHINA RAILWAY NO.5 ENGINEERING GHANA LTD", currency:"GHS", amount:976398063.1, region:"Volta", work_type:"Rehabilitation", agency:"Ghana Highway Authority", flags:"Multi-contract (3 awards)", km:19.9, source:"GHA Official List"},
+  {id:37, name:"REHABILITATION OF KPETOE - AVEAFIADENYIGBA ROAD INCLUDING ZIOPE TOWNS ROADS", date:"18-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S ROLIDER GHANA LTD", currency:"GHS", amount:545928621.25, region:"Volta", work_type:"Rehabilitation", agency:"Ghana Highway Authority", flags:"Multi-contract (3 awards); Duplicate road name", km:24, source:"GHA Official List"},
+  {id:38, name:"REHABILITATION OF KPETOE - AVEAFIADENYIGBA ROAD INCLUDING ZIOPE TOWNS ROADS", date:"18-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S TIMELINES INNOVATIONS COMPANY LTD", currency:"GHS", amount:250302362.02, region:"Volta", work_type:"Rehabilitation", agency:"Ghana Highway Authority", flags:"Multi-contract (3 awards); Duplicate road name", km:10.9, source:"GHA Official List"},
+  {id:39, name:"REHABILITATION OF PENYI - AFLAO", date:"18-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S MEDMO COMPANY LTD", currency:"GHS", amount:537999204.14, region:"Volta", work_type:"Rehabilitation", agency:"Ghana Highway Authority", flags:"", km:22, source:"GHA Official List"},
+  {id:40, name:"REHABILITATION OF AFIADENYIGBA - PENYI ROAD - INCLUDING INTERNAL LINK ROADS WITHIN DZODZE AND PENYI TOWNSHIP LOT 8A", date:"28-Nov-25", procurement:"SOLE SOURCING", contractor:"M/S TIMELINES INNOVATIONS COMPANY LTD", currency:"GHS", amount:367904784.34, region:"Volta", work_type:"Rehabilitation", agency:"Ghana Highway Authority", flags:"Multi-contract (3 awards)", km:17, source:"GHA Official List"},
+  {id:42, name:"REDEVELOPMENT OF WINNEBA - TAKORADI ROAD, DUALIZATION OF CAPE COAST - TAKORADI LOT 5", date:"29-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S ALKYRO JULES LIMITED COMPANY", currency:"GHS", amount:2509998661.0, region:"Western", work_type:"Dualisation", agency:"Ghana Highway Authority", flags:"High-value (>2B GHS); Duplicate road name", km:25, source:"GHA Official List"},
+  {id:43, name:"REDEVELOPMENT OF WINNEBA - TAKORADI ROAD, DUALIZATION OF CAPE COAST - TAKORADI LOT 6", date:"26-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S S & L CONSTRUCTION & ENGINEERING LTD", currency:"GHS", amount:3323232152.0, region:"Western", work_type:"Dualisation", agency:"Ghana Highway Authority", flags:"High-value (>2B GHS); Multi-contract (2 awards); Duplicate road name", km:23.6, source:"GHA Official List"},
+  {id:44, name:"UPGRADING OF BEDIAKO JUNCTION - CAMP 15 - SEFWI ADABOKROM", date:"15-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S KINGSPOK CONSTRUCTION LTD", currency:"GHS", amount:135594474.05, region:"Ahafo", work_type:"Upgrading", agency:"Ghana Highway Authority", flags:"Multi-contract (2 awards); Duplicate road name", km:9, source:"GHA Official List"},
+  {id:45, name:"CONSTRUCTION OF ENCHI - ELUBO ROAD", date:"29-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S TOP INTERNATIONAL ENG. GH. LTD", currency:"GHS", amount:1414219012.69, region:"Western North", work_type:"Construction", agency:"Ghana Highway Authority", flags:"", km:71.25, source:"GHA Official List"},
+  {id:46, name:"CONSTRUCTION OF DADIESO - AKONTOMBRA ROAD", date:"29-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S KINGSPOK CONSTRUCTION LTD", currency:"GHS", amount:816744717.14, region:"Western North", work_type:"Construction", agency:"Ghana Highway Authority", flags:"Multi-contract (2 awards)", km:22.3, source:"GHA Official List"},
+  {id:47, name:"UPGRADING OF ADWOFUAOSEIKOJOKROM ROAD", date:"18-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S CYMAIN GH LTD", currency:"GHS", amount:390077209.0, region:"Western North", work_type:"Upgrading", agency:"Department of Feeder Roads", flags:"", km:25, source:"GHA Official List"},
+  {id:48, name:"UPGRADING OF ENCHI - KUDJOURU - PEKYI", date:"18-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S MARIPOMA ENTERPRISE LTD", currency:"GHS", amount:410236050.39, region:"Western North", work_type:"Upgrading", agency:"Ghana Highway Authority", flags:"Multi-contract (6 awards); Duplicate road name", km:30, source:"GHA Official List"},
+  {id:49, name:"UPGRADING OF ENCHI - KUDJOURU - PEKYI", date:"18-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S BIG AIDOO CONSTRUCTION LTD", currency:"GHS", amount:469040715.45, region:"Western North", work_type:"Upgrading", agency:"Ghana Highway Authority", flags:"Duplicate road name", km:32, source:"GHA Official List"},
+  {id:54, name:"REHABILITATION OF MANKESSIM-AJUMAKO AGONA SWEDRU ROAD AND OTHERS", date:"30-Dec-25", procurement:"SOLE SOURCING", contractor:"E-SPEEDWAY CONSTRUCTION LTD", currency:"GHS", amount:2890514550.0, region:"Central", work_type:"Rehabilitation", agency:"Ghana Highway Authority", flags:"High-value (>2B GHS)", km:111, source:"GHA Official List"},
+  {id:56, name:"UPGRADING OF TUMU-HANLAWRA ROAD", date:"17-Dec-25", procurement:"SOLE SOURCING", contractor:"MESSRS GHANHALI COMPANY LIMITED", currency:"GHS", amount:207969054.78, region:"Upper West", work_type:"Upgrading", agency:"Ghana Highway Authority", flags:"", km:10, source:"GHA Official List"},
+  {id:58, name:"CONSTRUCTION OF ADAWSO BRIDGE", date:"30-Dec-25", procurement:"SOLE SOURCING", contractor:"SCL SONITRA CONSTRUCTION LIMITED", currency:"USD", amount:497664217.34, region:"Eastern", work_type:"Bridge Construction", agency:"Ghana Highway Authority", flags:"USD-denominated", km:null, source:"GHA Official List"},
+  {id:59, name:"CONSTRUCTION OF 3RD RING ROAD, TAMALE PHASE 1 - LOT 2", date:"22-Jan-26", procurement:"SOLE SOURCING", contractor:"CHINA RAILWAY NO.5 ENGINEERING (GH) LIMITED", currency:"GHS", amount:873575035.81, region:"Northern", work_type:"Construction", agency:"Urban Roads Department", flags:"Duplicate road name", km:11, source:"GHA Official List"},
+  {id:60, name:"CONSTRUCTION OF 3RD RING ROAD, TAMALE PHASE 1 - LOT 1", date:"22-Jan-26", procurement:"SOLE SOURCING", contractor:"SINOHYDRO CORPORATION LIMITED", currency:"GHS", amount:873575035.81, region:"Northern", work_type:"Construction", agency:"Urban Roads Department", flags:"Duplicate road name", km:11, source:"GHA Official List"},
+  {id:61, name:"CONSTRUCTION OF 3RD RING ROAD, TAMALE PHASE 1 - LOT 3", date:"22-Jan-26", procurement:"SOLE SOURCING", contractor:"MUNISCO LIMITED", currency:"GHS", amount:875018805.82, region:"Northern", work_type:"Construction", agency:"Urban Roads Department", flags:"Duplicate road name", km:11, source:"GHA Official List"},
+  {id:62, name:"CONSTRUCTION OF SUNYANI OUTER RING - LOT 1", date:"24-Nov-25", procurement:"SOLE SOURCING", contractor:"KOFI JOB CO. LTD", currency:"GHS", amount:995611392.11, region:"Bono", work_type:"Construction", agency:"Urban Roads Department", flags:"Multi-contract (3 awards); Duplicate road name", km:17, source:"GHA Official List"},
+  {id:63, name:"CONSTRUCTION OF SUNYANI OUTER RING - LOT 2", date:"24-Nov-25", procurement:"SOLE SOURCING", contractor:"KOFI JOB CO. LTD", currency:"GHS", amount:997973892.11, region:"Bono", work_type:"Construction", agency:"Urban Roads Department", flags:"Multi-contract (3 awards); Duplicate road name", km:17, source:"GHA Official List"},
+  {id:64, name:"CONSTRUCTION OF KUMASI OUTER RING ROAD - LOT 1", date:"25-Nov-25", procurement:"SOLE SOURCING", contractor:"ARAB CONTRACTORS GHANA LIMITED", currency:"GHS", amount:1029969450.51, region:"Ashanti", work_type:"Construction", agency:"Urban Roads Department", flags:"Multi-contract (3 awards); Duplicate road name", km:15, source:"GHA Official List"},
+  {id:65, name:"CONSTRUCTION OF KUMASI OUTER RING ROAD - LOT 2", date:"31-Dec-25", procurement:"SOLE SOURCING", contractor:"ARAB CONTRACTORS GHANA LIMITED", currency:"GHS", amount:1029969450.51, region:"Ashanti", work_type:"Construction", agency:"Urban Roads Department", flags:"Multi-contract (3 awards); Duplicate road name", km:15, source:"GHA Official List"},
+  {id:66, name:"CONSTRUCTION OF KUMASI OUTER RING ROAD - LOT 3", date:"24-Nov-25", procurement:"SOLE SOURCING", contractor:"ARAB CONTRACTORS GHANA LIMITED", currency:"GHS", amount:1031413200.51, region:"Ashanti", work_type:"Construction", agency:"Urban Roads Department", flags:"Multi-contract (3 awards); Duplicate road name", km:15, source:"GHA Official List"},
+  {id:70, name:"UPGRADING OF TODOME-TOH KPALIME - DZEMENI FEEDER ROAD AND DZEMENI TOWN ROADS", date:"17-Sep-25", procurement:"SOLE SOURCING", contractor:"M/S SANAM (GH) LIMITED", currency:"GHS", amount:300291294.94, region:"Volta", work_type:"Upgrading", agency:"Department of Feeder Roads", flags:"", km:24.07, source:"GHA Official List"},
+  {id:87, name:"UPGRADING OF TUMU-HAMILE ROAD", date:"17-Dec-25", procurement:"SOLE SOURCING", contractor:"M/S M.A & CONSTANT COMPANY LTD", currency:"GHS", amount:207969054.78, region:"Upper West", work_type:"Upgrading", agency:"Ghana Highway Authority", flags:"", km:15, source:"GHA Official List"},
+  {id:88, name:"REHABILITATION OF DODO PEPESU-NKWANTA ROAD", date:"31-Dec-25", procurement:"SOLE SOURCING", contractor:"Groth 82 Global Ltd.", currency:"GHS", amount:683902957.69, region:"Oti", work_type:"Rehabilitation", agency:"Ghana Highway Authority", flags:"", km:46.4, source:"GHA Official List"},
+  {id:89, name:"UPGRADING OF AKOSOMBO-GYAKITI-KUDIKOPE ROAD", date:"21-Nov-25", procurement:"SOLE SOURCING", contractor:"Mmanab Company Limited", currency:"GHS", amount:333147194.0, region:"Eastern", work_type:"Upgrading", agency:"Department of Feeder Roads", flags:"", km:32, source:"GHA Official List"},
+  {id:91, name:"UPGRADING OF OYIBI-APPOLONIA-AFIENYA ROAD", date:"17-Dec-25", procurement:"SOLE SOURCING", contractor:"Proslet", currency:"GHS", amount:708097258.5, region:"Greater Accra", work_type:"Upgrading", agency:"Ghana Highway Authority", flags:"", km:21, source:"GHA Official List"},
+  {id:92, name:"UPGRADING OF APEGUSO - MPAKADAN FEEDER ROAD", date:"21-Nov-25", procurement:"SOLE SOURCING", contractor:"Build Managers Limited", currency:"GHS", amount:145220449.36, region:"Eastern", work_type:"Upgrading", agency:"Department of Feeder Roads", flags:"", km:9, source:"GHA Official List"},
+  {id:93, name:"PARTIAL RECONSTRUCTION OF NAVRONGO - TUMU ROAD (27KM)", date:"11-Dec-25", procurement:"SOLE SOURCING", contractor:"M/S MEDMO COMPANY LTD", currency:"GHS", amount:360107867.58, region:"Upper East", work_type:"Reconstruction", agency:"Ghana Highway Authority", flags:"", km:27, source:"GHA Official List"},
+  {id:94, name:"REHABILITATION OF WA - HAN ROAD (KM 0-54)", date:"17-Dec-25", procurement:"SOLE SOURCING", contractor:"M/S MO & MO COMPANY LTD", currency:"GHS", amount:436384865.23, region:"Upper West", work_type:"Rehabilitation", agency:"Ghana Highway Authority", flags:"", km:54, source:"GHA Official List"},
+  {id:95, name:"REHABILITATION OF AFIADENYIGBA - PENYI ROAD (KM 76.60 - KM 85.0) INCLUDING DUALISATION OF DZODZE TOWN ROAD", date:"12-Nov-25", procurement:"SOLE SOURCING", contractor:"M/S MEDMO COMPANY LTD", currency:"GHS", amount:441304080.92, region:"Volta", work_type:"Rehabilitation", agency:"Ghana Highway Authority", flags:"", km:11.9, source:"GHA Official List"},
+];
+const MRH_PENDING = [
   {id:82, name:"REHABILITATION/UPGRADING OF KASOA-WINNEBA ROAD", date:"Sep-25", procurement:"Pending Disclosure", contractor:"Pending Disclosure", currency:"GHS", amount:0, region:"Central", work_type:"Rehabilitation/Upgrading", agency:"Ghana Highway Authority", flags:"Novated project", source:"MRH Official List"},
   {id:83, name:"REHABILITATION OF OFANKOR-NSAWAM ROAD (DUAL CARRIAGEWAY)", date:"Sep-25", procurement:"Pending Disclosure", contractor:"Pending Disclosure", currency:"GHS", amount:0, region:"Greater Accra", work_type:"Dualisation", agency:"Ghana Highway Authority", flags:"Novated project", source:"MRH Official List"},
   {id:84, name:"DUALISATION OF TAKORADI-AGONA JUNCTION ROAD", date:"Sep-25", procurement:"Pending Disclosure", contractor:"Pending Disclosure", currency:"GHS", amount:0, region:"Central/Western", work_type:"Dualisation", agency:"Ghana Highway Authority", flags:"Novated project", source:"MRH Official List"},
   {id:85, name:"CONSTRUCTION OF SUAME INTERCHANGE AND LOCAL ROADS", date:"Sep-25", procurement:"Pending Disclosure", contractor:"Pending Disclosure", currency:"GHS", amount:0, region:"Ashanti", work_type:"Construction", agency:"Urban Roads Department", flags:"Novated project", source:"MRH Official List"},
   {id:86, name:"DUALISATION OF ADENTA-DODOWA ROAD", date:"Sep-25", procurement:"Pending Disclosure", contractor:"Pending Disclosure", currency:"GHS", amount:0, region:"Greater Accra", work_type:"Dualisation", agency:"Ghana Highway Authority", flags:"Novated project", source:"MRH Official List"},
-  {id:87, name:"UPGRADING OF TUMU-HAMILE ROAD", date:"Sep-25", procurement:"Pending Disclosure", contractor:"Pending Disclosure", currency:"GHS", amount:0, region:"Upper West", work_type:"Upgrading", agency:"Ghana Highway Authority", flags:"", source:"MRH Official List"},
-  {id:88, name:"REHABILITATION OF DODO PEPESU-NKWANTA ROAD", date:"Sep-25", procurement:"Pending Disclosure", contractor:"Pending Disclosure", currency:"GHS", amount:0, region:"Oti", work_type:"Rehabilitation", agency:"Ghana Highway Authority", flags:"", source:"MRH Official List"},
-  {id:89, name:"UPGRADING OF AKOSOMBO-GYAKITI-KUDIKOPE ROAD", date:"Sep-25", procurement:"Pending Disclosure", contractor:"Pending Disclosure", currency:"GHS", amount:0, region:"Eastern", work_type:"Upgrading", agency:"Ghana Highway Authority", flags:"", source:"MRH Official List"},
   {id:90, name:"UPGRADING OF ADOMI BRIDGE-AKWAMUFIE ROAD", date:"Sep-25", procurement:"Pending Disclosure", contractor:"Pending Disclosure", currency:"GHS", amount:0, region:"Eastern", work_type:"Upgrading", agency:"Ghana Highway Authority", flags:"", source:"MRH Official List"},
-  {id:91, name:"UPGRADING OF OYIBI-APPOLONIA-AFIENYA ROAD", date:"Sep-25", procurement:"Pending Disclosure", contractor:"Pending Disclosure", currency:"GHS", amount:0, region:"Greater Accra", work_type:"Upgrading", agency:"Ghana Highway Authority", flags:"", source:"MRH Official List"},
 ];
-const contracts = [...RAW.contracts, ...MRH_EXTRA];
-const regions = RAW.regions;
-const contractors = RAW.contractors;
+const contracts = [...GHA_OFFICIAL, ...MRH_PENDING];
+// Computed live from `contracts` (not RAW's precomputed snapshot) so region and
+// contractor totals stay accurate after merging in the GHA Official List data.
+function aggregateBy(items, keyFn, nameField) {
+  const map = new Map();
+  items.forEach(c => {
+    const key = keyFn(c);
+    if (!key || key === 'Pending Disclosure') return;
+    if (!map.has(key)) map.set(key, { [nameField]: key, count: 0, total_ghs: 0 });
+    const entry = map.get(key);
+    entry.count++;
+    if (c.currency === 'GHS' && c.amount) entry.total_ghs += c.amount;
+  });
+  return [...map.values()];
+}
+const regions = aggregateBy(contracts, c => c.region, 'region');
+const contractors = aggregateBy(contracts, c => c.contractor, 'name');
 
 // At-a-glance counts (reframed)
 let dupCount=0, highValCount=0, multiCount=0, usdCount=0;
@@ -593,6 +869,17 @@ document.getElementById('dupNum').textContent = multiLotRoads.size + ' roads';
 document.getElementById('highValNum').textContent = highValCount;
 document.getElementById('multiNum').textContent = ghanaianFirmCount + ' of ' + contractors.length + ' firms';
 document.getElementById('usdNum').textContent = usdCount;
+
+// ─── Live headline stats (replace old hardcoded programme-wide figures) ──
+const rehabCount = contracts.filter(c => (c.work_type || '').toLowerCase().includes('rehabilitation')).length;
+document.getElementById('rehabNum').textContent = rehabCount;
+const totalGHSInvestment = contracts.reduce((s, c) => s + (c.currency === 'GHS' ? (c.amount || 0) : 0), 0);
+document.getElementById('statInvestment').textContent = 'GHS ' + (totalGHSInvestment / 1e9).toFixed(1) + 'B';
+const totalKmTracked = contracts.reduce((s, c) => s + (typeof c.km === 'number' ? c.km : 0), 0);
+document.getElementById('statKm').textContent = Math.round(totalKmTracked).toLocaleString();
+document.getElementById('statGhContractors').textContent = ghanaianFirmCount;
+const uniqueRegionsCovered = new Set(contracts.flatMap(c => (c.region || '').split('/'))).size;
+document.getElementById('statRegions').textContent = uniqueRegionsCovered + ' / 16';
 
 // ─── POPULATE FILTERS ──────────────────────────────────────────
 function populateSelect(id, values) {
@@ -700,28 +987,8 @@ new Chart(document.getElementById('top10Chart'), {
 });
 
 // ─── TOP 10 LONGEST ROADS (verified km data) ───────────────────
-const ROAD_KM = [
-  { name: 'REHABILITATION OF TEMA - AFLAO ROAD',                                              km: 166  },
-  { name: 'REHABILITATION OF WENCHI - SAWLA',                                                  km: 159  },
-  { name: 'REHABILITATION OF WENCHI - SAWLA INCLUDING TINGA TOWN ROADS',                       km: 159  },
-  { name: 'REHABILITATION OF WENCHI SAWLA AND OTHERS',                                         km: 159  },
-  { name: 'REHABILITATION OF WENCHISAWLA ROAD',                                                km: 159  },
-  { name: 'REHABILITATION OF WENCHISAWLA ROAD INCLUDING BAMBOI AND BANDA NKWANTA TOWN ROADS',  km: 159  },
-  { name: 'UPGRADING OF SABOBA - CHEREPONI ROAD - LOT 1',                                      km: 23.5 },
-  { name: 'UPGRADING OF SABOBA - CHEREPONI ROAD - LOT 2',                                      km: 23.5 },
-  { name: 'UPGRADING OF EASTERN CORRIDOR ROAD (UPGRADING OF NKWANTA - OTI DAMANKO)',           km: 50.3 },
-  { name: 'RECONSTRUCTION OF NKWANTA - DAMBAI ROAD (INCLUDING TOWN ROADS)',                    km: 50   },
-  { name: 'DUALISATION OF WINNEBA - CAPE COAST ROAD LOT 2',                                    km: 45   },
-  { name: 'DUALISATION OF WINNEBA - CAPE COAST ROAD LOT 3',                                    km: 45.4 },
-  { name: 'REDEVELOPMENT OF WINNEBA - TAKORADI ROAD, DUALIZATION OF CAPE COAST - TAKORADI LOT 4', km: 24.5 },
-  { name: 'REHABILITATION OF ATIMPOKU - ASIKUMA JUNCTION',                                     km: 36.5 },
-  { name: 'REHABILITATION OF BEREKUM-SEIKWA ROAD',                                             km: 34.6 },
-  { name: 'REHABILITATION OF TECHIMAN - NKONSIA - WENCHI ROAD',                                km: 33   },
-];
-contracts.forEach(c => {
-  const match = ROAD_KM.find(r => r.name === c.name.toUpperCase().trim());
-  if (match) c.km = match.km;
-});
+// Every surviving contract's km comes directly from the GHA Official List
+// (set above) — no fallback/estimated lengths.
 const _seenKm = new Set();
 const top10km = [...contracts]
   .filter(c => c.km && !_seenKm.has(c.km + c.name.slice(0,20)) && _seenKm.add(c.km + c.name.slice(0,20)))
@@ -831,9 +1098,9 @@ contracts.forEach(c => {
 
 function sourceBadge(c) {
   if (c.source === 'MRH Official List') {
-    return '<span style="display:inline-block;background:#fff3cd;color:#856404;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;white-space:nowrap;">MRH Official</span>';
+    return '<span style="display:inline-block;background:#fff3cd;color:#856404;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;white-space:nowrap;">MRH Pending</span>';
   }
-  return '<span style="display:inline-block;background:#d1fae5;color:#065f46;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;white-space:nowrap;">RTI Confirmed</span>';
+  return '<span style="display:inline-block;background:#dbeafe;color:#1e40af;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;white-space:nowrap;">GHA Official</span>';
 }
 
 function chipHtml(flags) {
@@ -885,7 +1152,7 @@ function render() {
       <td>${c.id}</td>
       <td>
         <div class="proj-name">${c.name}</div>
-        <div style="margin-top:3px;">${sourceBadge(c)}</div>
+        <div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap;">${sourceBadge(c)}${healthBadgeHtml(c)}</div>
         <div id="counts-${c.id}">${buildCountsHtml(getReports(c.id))}</div>
       </td>
       <td><span class="region-pill">${c.region||'—'}</span></td>
@@ -905,13 +1172,14 @@ function render() {
           <button class="action-btn seen"  onclick="showStatusModal(${c.id})">👁️ I Saw This</button>
           <button class="action-btn qr"    onclick="showQRModal(${c.id})">📱 QR</button>
           <button class="action-btn cmts"  onclick="showCommentsModal(${c.id})">💬 <span id="cbadge-${c.id}"></span>Comments</button>
+          <button class="action-btn sos"   onclick="showDisasterModal(${c.id})">🚨 Report Emergency</button>
         </div>
         <div class="flag-chips" style="margin-top:4px;">${chipHtml(c.flags)}</div>
       </td>
     </tr>`).join('');
-  const rti = filtered.filter(c=>c.source==='RTI Data').length;
-  const mrh = filtered.filter(c=>c.source!=='RTI Data').length;
-  document.getElementById('resultCount').textContent = `${filtered.length} road projects (${rti} confirmed + ${mrh} MRH official)`;
+  const ghaOfficial = filtered.filter(c=>c.source==='GHA Official List').length;
+  const mrh = filtered.filter(c=>c.source==='MRH Official List').length;
+  document.getElementById('resultCount').textContent = `${filtered.length} road projects (${ghaOfficial} GHA official + ${mrh} MRH pending)`;
   renderPagination();
   // Restore comment badges after render
   filtered.slice((page-1)*perPage, page*perPage).forEach(c => {
@@ -1005,6 +1273,67 @@ function buildCountsHtml(r) {
   return html;
 }
 
+// ══════════════════════════════════════════════════════════
+// ROAD HEALTH SCORE (needed by render() — defined before second
+// script loads. Transparent formula, no fabricated inputs:
+// government data confidence + real citizen activity on this device.)
+// ══════════════════════════════════════════════════════════
+function getDisasters(id) {
+  return JSON.parse(localStorage.getItem('rw_disasters_' + id) || '[]');
+}
+function healthScore(c) {
+  const dataConfidence = c.source === 'GHA Official List' ? 100 : 70;
+  const r = getReports(c.id);
+  const totalVotes = r.wip + r.nw + r.done;
+  const engagement = Math.min(100, totalVotes * 15);
+  const verifiedRatio = totalVotes ? Math.round(r.done / totalVotes * 100) : null;
+  const commentCount = getComments(c.id).length;
+  const commentScore = Math.min(100, commentCount * 10);
+  const disasters = getDisasters(c.id).length;
+  const disasterPenalty = Math.min(40, disasters * 15);
+  let overall;
+  if (totalVotes === 0 && commentCount === 0) {
+    overall = dataConfidence - disasterPenalty;
+  } else {
+    overall = (dataConfidence * 0.30) + (engagement * 0.25) + ((verifiedRatio ?? 50) * 0.20) + (commentScore * 0.25) - disasterPenalty;
+  }
+  overall = Math.max(0, Math.min(100, Math.round(overall)));
+  return { overall, dataConfidence, engagement, verifiedRatio, commentScore, disasters, disasterPenalty, totalVotes, commentCount };
+}
+function healthLabel(score) {
+  if (score >= 80) return ['Excellent', '#065f46'];
+  if (score >= 60) return ['Good', '#1e40af'];
+  if (score >= 40) return ['Fair', '#92400e'];
+  if (score >= 20) return ['Needs Attention', '#991b1b'];
+  return ['Critical', '#7f1d1d'];
+}
+function healthBadgeHtml(c, prefix) {
+  prefix = prefix || '';
+  const h = healthScore(c);
+  const bucket = Math.floor(h.overall / 10) * 10;
+  const label = healthLabel(h.overall)[0];
+  return `<span id="health-${prefix}${c.id}" class="health-badge health-${bucket}" title="Road Health Score: ${label}">💚 ${h.overall}/100</span>`;
+}
+function healthPanelHtml(c) {
+  const h = healthScore(c);
+  const [label, color] = healthLabel(h.overall);
+  const row = (lbl, val) => `<div class="health-row"><span style="min-width:160px;">${lbl}</span><div class="health-bar-track"><div class="health-bar-fill" style="width:${val}%;"></div></div><span style="min-width:32px;text-align:right;">${Math.round(val)}</span></div>`;
+  return `<div class="health-panel">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <div class="health-score-big" style="color:${color};">${h.overall}</div>
+      <div>
+        <div style="font-weight:700;color:${color};">${label} · Road Health Score</div>
+        <div style="font-size:11px;color:var(--muted);">Combines government data confidence, citizen report volume, verified-completion ratio, and comment activity${h.disasters ? ', minus open emergency reports' : ''}. Reports are from this device.</div>
+      </div>
+    </div>
+    ${row('Government data confidence', h.dataConfidence)}
+    ${row('Community engagement', h.engagement)}
+    ${row('Verified-completion ratio', h.verifiedRatio ?? 50)}
+    ${row('Comment activity', h.commentScore)}
+    ${h.disasters ? `<div style="font-size:11px;color:var(--red);margin-top:8px;font-weight:700;">⚠️ ${h.disasters} open emergency report${h.disasters > 1 ? 's' : ''} reported on this road (−${h.disasterPenalty} pts)</div>` : ''}
+  </div>`;
+}
+
 applyFilters();
 
 // ═══════════════════════════════════════════════════════════
@@ -1052,12 +1381,14 @@ function renderCards() {
         </div>
       </div>
       <div style="font-size:12px;"><strong>Investment:</strong> ${fmt(c)}</div>
+      <div style="margin-top:2px;">${healthBadgeHtml(c, 'card-')}</div>
       <div id="counts-card-${c.id}">${buildCountsHtml(getReports(c.id))}</div>
       <div class="card-actions">
         <button class="card-btn card-btn-share" onclick="shareProject(${c.id})">📤 Share</button>
         <button class="card-btn card-btn-seen"  onclick="showStatusModal(${c.id})">👁️ I Saw This</button>
         <button class="card-btn card-btn-qr"    onclick="showQRModal(${c.id})">📱 QR</button>
         <button class="card-btn card-btn-cmts"  onclick="showCommentsModal(${c.id})">💬 <span id="cbadge-card-${c.id}">${getComments(c.id).length > 0 ? getComments(c.id).length + ' ' : ''}</span>Comments</button>
+        <button class="card-btn" style="background:#fee2e2;color:var(--red);border:1px solid #fca5a5;" onclick="showDisasterModal(${c.id})">🚨 Report Emergency</button>
       </div>
     </div>`;
   }).join('');
@@ -1252,6 +1583,7 @@ showContacts('gha');
       <button class="modal-close" onclick="closeModal('statusModal')">✕</button>
     </div>
     <div class="modal-body">
+      <div id="statusHealthPanel"></div>
       <div class="status-btns">
         <button class="status-btn" onclick="submitStatus('wip')" id="btn-wip">
           <span class="s-icon">🚧</span>Work in Progress
@@ -1265,8 +1597,9 @@ showContacts('gha');
       </div>
       <div id="statusModalCounts" style="text-align:center;margin-top:8px;font-size:13px;color:var(--muted);"></div>
       <div id="statusThanks" style="display:none;text-align:center;padding:14px;background:#e8f5ee;border-radius:8px;margin-top:12px;font-weight:700;color:var(--green);">
-        ✅ Thank you! Your report has been recorded.
+        ✅ Thank you! Your report has been recorded. <span id="statusPointsEarned"></span>
       </div>
+      <button class="card-btn" style="width:100%;margin-top:12px;background:#fee2e2;color:var(--red);border:1px solid #fca5a5;font-weight:700;padding:10px;border-radius:8px;cursor:pointer;" onclick="closeModal('statusModal');showDisasterModal(activeContractId);">🚨 Report an emergency on this road instead</button>
       <p style="font-size:11px;color:#aaa;margin-top:16px;text-align:center;">One report per road, per device. Reports are stored on your device only in this version.</p>
     </div>
   </div>
@@ -1328,12 +1661,76 @@ showContacts('gha');
           <option value="stopped">⛔ Work has stopped</option>
         </select>
         <textarea id="commentText" placeholder="Describe what you saw, e.g. 'As of March 2026, machines are on site near Accra junction. Workers present daily.' Photos or details welcome."></textarea>
+        <div class="photo-attach-row">
+          <label class="card-btn" style="background:#ede9fe;color:#6d28d9;border:1px solid #c4b5fd;padding:9px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;">
+            📷 Attach a photo (optional)
+            <input type="file" id="commentPhoto" accept="image/*" style="display:none;" onchange="handlePhotoSelect(event)">
+          </label>
+          <img id="commentPhotoPreview" class="photo-preview">
+          <span id="commentPhotoClear" style="display:none;color:var(--red);font-size:12px;cursor:pointer;font-weight:700;" onclick="clearPhotoSelect()">✕ Remove</span>
+        </div>
         <button class="btn-submit" onclick="submitComment()">📤 Submit Report</button>
       </div>
-      <p style="font-size:11px;color:#aaa;margin-top:12px;">Reports are saved on this device. Share the page link so others can see your community's updates.</p>
+      <p style="font-size:11px;color:#aaa;margin-top:12px;">Reports are saved on this device. Share the page link so others can see your community's updates. +8 reputation points for a report, +10 bonus for a photo.</p>
     </div>
   </div>
 </div>
+
+<!-- ══════════════════════════════════════════════════════════
+     MODAL 4 — DISASTER / EMERGENCY REPORT
+══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="disasterModal">
+  <div class="modal-box">
+    <div class="modal-header" style="background:var(--red);">
+      <div>
+        <h2>🚨 Report an Emergency</h2>
+        <div style="font-size:12px;opacity:.85;margin-top:3px;">Collapsed bridges, flooded roads, washed-away culverts, dangerous potholes, or broken traffic lights</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('disasterModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="comment-form">
+        <select id="disasterRoad"></select>
+      </div>
+      <div class="disaster-type-grid" id="disasterTypeGrid"></div>
+      <div class="comment-form">
+        <textarea id="disasterNote" placeholder="Describe the emergency — location details, how urgent, anyone affected…"></textarea>
+        <button class="btn-submit" style="background:var(--red);" onclick="submitDisaster()">🚨 Submit Emergency Report</button>
+      </div>
+      <p style="font-size:11px;color:#aaa;margin-top:10px;text-align:center;">This report is stored on your device and shown in the Public Alerts feed on this page. For life-threatening emergencies, also call the Ghana Highway Authority hotline <strong>0800-111-789</strong> or the National Emergency Number <strong>112</strong>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     MODAL 5 — ECOSYSTEM MODULE "COMING SOON"
+══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="moduleModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div><h2 id="moduleModalTitle">Coming Soon</h2></div>
+      <button class="modal-close" onclick="closeModal('moduleModal')">✕</button>
+    </div>
+    <div class="modal-body" id="moduleModalBody"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     MODAL 6 — PHOTO LIGHTBOX
+══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="lightboxModal">
+  <div class="modal-box" style="max-width:640px;">
+    <div class="modal-header">
+      <div><h2>📷 Citizen Photo</h2></div>
+      <button class="modal-close" onclick="closeModal('lightboxModal')">✕</button>
+    </div>
+    <div class="modal-body" style="text-align:center;">
+      <img id="lightboxImg" style="max-width:100%;border-radius:8px;">
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
 // ══════════════════════════════════════════════════════════
@@ -1361,6 +1758,7 @@ function showStatusModal(id) {
     document.getElementById('btn-' + s).classList.toggle('active-btn', r.myVote === s);
   });
   renderStatusCounts(r);
+  document.getElementById('statusHealthPanel').innerHTML = healthPanelHtml(c);
   openModal('statusModal');
 }
 
@@ -1373,15 +1771,22 @@ function renderStatusCounts(r) {
 
 function submitStatus(status) {
   const id = activeContractId;
+  const c = contracts.find(x => x.id === id);
   const r = getReports(id);
+  const isNewVote = r.myVote !== status;
   if (r.myVote && r.myVote !== status) { r[r.myVote] = Math.max(0, r[r.myVote] - 1); }
   if (r.myVote !== status) { r[status]++; r.myVote = status; }
   saveReports(id, r);
   ['wip','nw','done'].forEach(s => document.getElementById('btn-'+s).classList.toggle('active-btn', s === status));
   renderStatusCounts(r);
   document.getElementById('statusThanks').style.display = 'block';
+  document.getElementById('statusPointsEarned').textContent = isNewVote ? '(+5 reputation)' : '';
+  if (isNewVote) {
+    logActivity('status', id, c.name, statusLabels[status] || status, 5);
+  }
   // Update inline counts in table
   updateInlineCounts(id, r);
+  document.getElementById('statusHealthPanel').innerHTML = healthPanelHtml(c);
 }
 
 function updateInlineCounts(id, r) {
@@ -1389,6 +1794,11 @@ function updateInlineCounts(id, r) {
   if (el) el.innerHTML = buildCountsHtml(r);
   const elCard = document.getElementById('counts-card-' + id);
   if (elCard) elCard.innerHTML = buildCountsHtml(r);
+  const hb = document.getElementById('health-' + id);
+  const c = contracts.find(x => x.id === id);
+  if (hb && c) hb.outerHTML = healthBadgeHtml(c);
+  const hbCard = document.getElementById('health-card-' + id);
+  if (hbCard && c) hbCard.outerHTML = healthBadgeHtml(c, 'card-');
 }
 
 // ══════════════════════════════════════════════════════════
@@ -1455,9 +1865,10 @@ function showCommentsModal(id) {
   activeContractId = id;
   const c = contracts.find(x => x.id === id);
   document.getElementById('commentsModalTitle').textContent = '💬 ' + c.name;
-  document.getElementById('commentName').value = '';
+  document.getElementById('commentName').value = getProfile().name || '';
   document.getElementById('commentStatus').value = '';
   document.getElementById('commentText').value = '';
+  clearPhotoSelect();
   renderComments(id);
   openModal('commentsModal');
 }
@@ -1471,35 +1882,51 @@ function renderComments(id) {
   }
   thread.innerHTML = comments.slice().reverse().map(cm => {
     const statusBadge = cm.status ? `<span class="comment-status-badge" style="background:${statusBgMap[cm.status]||'#eee'};color:${statusClrMap[cm.status]||'#333'}">${statusLabels[cm.status]||cm.status}</span>` : '';
+    const trustedBadge = cm.trusted ? '<span class="trusted-badge">✅ Trusted Reporter</span>' : '';
+    const photoHtml = cm.photo ? `<img src="${cm.photo}" class="comment-photo" onclick="openLightbox('${cm.photo}')">` : '';
     return `<div class="comment-card">
-      <div class="comment-meta">${cm.name || 'Anonymous'} &nbsp;·&nbsp; ${cm.date}${statusBadge}</div>
+      <div class="comment-meta">${cm.name || 'Anonymous'}${trustedBadge} &nbsp;·&nbsp; ${cm.date}${statusBadge}</div>
       <div>${cm.text}</div>
+      ${photoHtml}
     </div>`;
   }).join('');
 }
 
 function submitComment() {
   const id = activeContractId;
+  const c = contracts.find(x => x.id === id);
   const name = document.getElementById('commentName').value.trim() || 'Anonymous';
   const status = document.getElementById('commentStatus').value;
   const text = document.getElementById('commentText').value.trim();
   if (!text) { alert('Please describe what you saw before submitting.'); return; }
   const comments = getComments(id);
   const now = new Date();
-  comments.push({
+  const profile = getProfile();
+  const entry = {
     name, status, text,
-    date: now.toLocaleDateString('en-GH', { day:'numeric', month:'short', year:'numeric' })
-  });
+    date: now.toLocaleDateString('en-GH', { day:'numeric', month:'short', year:'numeric' }),
+    trusted: profile.points >= 750,
+  };
+  if (_pendingPhotoDataUrl) entry.photo = _pendingPhotoDataUrl;
+  comments.push(entry);
+  // Cap stored photos per road at 8 (drop oldest photo data, keep text) to protect device storage
+  const withPhoto = comments.filter(x => x.photo);
+  if (withPhoto.length > 8) {
+    for (let i = 0; i < withPhoto.length - 8; i++) delete withPhoto[i].photo;
+  }
   saveComments(id, comments);
+  const pts = entry.photo ? 18 : 8;
+  logActivity('comment', id, c.name, text.slice(0,80), pts);
   document.getElementById('commentText').value = '';
-  document.getElementById('commentName').value = '';
   document.getElementById('commentStatus').value = '';
+  clearPhotoSelect();
   renderComments(id);
   // update comment badge in table and card view
   const badge = document.getElementById('cbadge-' + id);
   if (badge) { badge.textContent = comments.length + ' '; badge.style.display = 'inline'; }
   const badgeCard = document.getElementById('cbadge-card-' + id);
   if (badgeCard) { badgeCard.textContent = comments.length + ' '; }
+  updateInlineCounts(id, getReports(id));
 }
 
 window.showStatusModal = showStatusModal;
@@ -1510,6 +1937,349 @@ window.submitStatus = submitStatus;
 window.submitComment = submitComment;
 window.printQR = printQR;
 window.downloadQR = downloadQR;
+
+// ══════════════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════════════
+let toastTimer = null;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  if (!t) return;
+  clearTimeout(toastTimer);
+  t.textContent = msg;
+  t.classList.add('show');
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// ══════════════════════════════════════════════════════════
+// FEATURE 4 — REPUTATION / GAMIFICATION (device-local)
+// ══════════════════════════════════════════════════════════
+const BADGE_TIERS = [
+  { name: 'Newcomer',            min: 0,     icon: '🌱' },
+  { name: 'Bronze Reporter',     min: 50,    icon: '🥉' },
+  { name: 'Silver Reporter',     min: 250,   icon: '🥈' },
+  { name: 'Gold Reporter',       min: 750,   icon: '🥇' },
+  { name: 'Diamond Reporter',    min: 2000,  icon: '💎' },
+  { name: 'National Ambassador', min: 10000, icon: '🏅' },
+];
+function getProfile() {
+  return JSON.parse(localStorage.getItem('rw_profile') || '{"points":0,"name":""}');
+}
+function saveProfile(p) { localStorage.setItem('rw_profile', JSON.stringify(p)); }
+function currentTier(points) {
+  let tier = BADGE_TIERS[0], next = BADGE_TIERS[1] || null;
+  for (let i = 0; i < BADGE_TIERS.length; i++) {
+    if (points >= BADGE_TIERS[i].min) { tier = BADGE_TIERS[i]; next = BADGE_TIERS[i+1] || null; }
+  }
+  return { tier, next };
+}
+function awardPoints(n, reason) {
+  const p = getProfile();
+  const before = currentTier(p.points).tier;
+  p.points += n;
+  saveProfile(p);
+  const after = currentTier(p.points).tier;
+  renderProfileWidget();
+  showToast(`+${n} reputation — ${reason}`);
+  if (after.name !== before.name) {
+    setTimeout(() => showToast(`🎉 New tier unlocked: ${after.icon} ${after.name}!`), 1700);
+  }
+}
+function saveProfileName() {
+  const p = getProfile();
+  p.name = document.getElementById('profileNameInput').value.trim();
+  saveProfile(p);
+  showToast('Display name saved');
+}
+function renderProfileWidget() {
+  const p = getProfile();
+  const { tier, next } = currentTier(p.points);
+  const pill = document.getElementById('navProfilePill');
+  if (pill) pill.textContent = `${tier.icon} ${p.points} pts`;
+  const icon = document.getElementById('profileBadgeIcon');
+  if (icon) icon.textContent = tier.icon;
+  const tierNameEl = document.getElementById('profileTierName');
+  if (tierNameEl) tierNameEl.textContent = tier.name;
+  const pointsEl = document.getElementById('profilePoints');
+  if (pointsEl) pointsEl.textContent = p.points.toLocaleString() + ' pts';
+  const fill = document.getElementById('profileProgressFill');
+  const label = document.getElementById('profileProgressLabel');
+  if (fill && label) {
+    if (next) {
+      const span = next.min - tier.min;
+      const progressed = p.points - tier.min;
+      const pct = Math.max(0, Math.min(100, Math.round(progressed / span * 100)));
+      fill.style.width = pct + '%';
+      label.textContent = `${(next.min - p.points).toLocaleString()} points to ${next.icon} ${next.name}`;
+    } else {
+      fill.style.width = '100%';
+      label.textContent = 'Maximum tier reached — you are a National Ambassador!';
+    }
+  }
+  const nameInput = document.getElementById('profileNameInput');
+  if (nameInput && document.activeElement !== nameInput) nameInput.value = p.name || '';
+  const statsEl = document.getElementById('profileStatsText');
+  if (statsEl) statsEl.textContent = `${getActivity().length} activities logged on this device`;
+  const tierTable = document.getElementById('tierTable');
+  if (tierTable) {
+    tierTable.innerHTML = '<tr><th>Tier</th><th>Points</th><th></th></tr>' + BADGE_TIERS.map(t => `
+      <tr class="${t.name===tier.name?'current-tier':''}">
+        <td>${t.icon} ${t.name}</td>
+        <td>${t.min.toLocaleString()}+</td>
+        <td>${t.name===tier.name?'← You are here':''}</td>
+      </tr>`).join('');
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// ACTIVITY LOG — powers Alerts, Weekly Digest, and Reputation
+// ══════════════════════════════════════════════════════════
+function getActivity() {
+  return JSON.parse(localStorage.getItem('rw_activity') || '[]');
+}
+function logActivity(type, roadId, roadName, detail, points) {
+  const activity = getActivity();
+  activity.push({ type, roadId, roadName, detail, points: points || 0, ts: Date.now() });
+  if (activity.length > 500) activity.splice(0, activity.length - 500);
+  localStorage.setItem('rw_activity', JSON.stringify(activity));
+  if (points) awardPoints(points, detail);
+  renderAlerts();
+  renderDigest();
+}
+
+// ══════════════════════════════════════════════════════════
+// FEATURE 5 — DISASTER / EMERGENCY REPORTING
+// ══════════════════════════════════════════════════════════
+const DISASTER_TYPES = [
+  { key:'bridge',       icon:'🌉', label:'Collapsed Bridge' },
+  { key:'flood',        icon:'🌊', label:'Flooded Road' },
+  { key:'culvert',      icon:'🕳️', label:'Washed-Away Culvert' },
+  { key:'pothole',      icon:'⚠️', label:'Dangerous Pothole' },
+  { key:'trafficlight', icon:'🚦', label:'Broken Traffic Light' },
+];
+let _disasterSelectedType = null;
+function showDisasterModal(roadId) {
+  const sel = document.getElementById('disasterRoad');
+  sel.innerHTML = contracts.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+  if (roadId) sel.value = roadId;
+  _disasterSelectedType = null;
+  document.getElementById('disasterTypeGrid').innerHTML = DISASTER_TYPES.map(t => `
+    <button type="button" class="disaster-type-btn" id="dtype-${t.key}" onclick="selectDisasterType('${t.key}')">
+      <span class="s-icon">${t.icon}</span>${t.label}
+    </button>`).join('');
+  document.getElementById('disasterNote').value = '';
+  openModal('disasterModal');
+}
+function selectDisasterType(key) {
+  _disasterSelectedType = key;
+  DISASTER_TYPES.forEach(t => document.getElementById('dtype-'+t.key).classList.toggle('active-btn', t.key === key));
+}
+function submitDisaster() {
+  const roadId = parseInt(document.getElementById('disasterRoad').value, 10);
+  const c = contracts.find(x => x.id === roadId);
+  const note = document.getElementById('disasterNote').value.trim();
+  if (!_disasterSelectedType) { alert('Please select what kind of emergency you are reporting.'); return; }
+  if (!note) { alert('Please add a short description of the emergency.'); return; }
+  const typeInfo = DISASTER_TYPES.find(t => t.key === _disasterSelectedType);
+  const list = getDisasters(roadId);
+  list.push({ type: _disasterSelectedType, label: typeInfo.label, note, ts: Date.now() });
+  localStorage.setItem('rw_disasters_' + roadId, JSON.stringify(list));
+  logActivity('disaster', roadId, c.name, `${typeInfo.icon} ${typeInfo.label}: ${note.slice(0,80)}`, 12);
+  updateInlineCounts(roadId, getReports(roadId));
+  closeModal('disasterModal');
+  showToast('🚨 Emergency reported — thank you for keeping citizens safe');
+}
+
+// ══════════════════════════════════════════════════════════
+// FEATURE 6 — PUBLIC ALERTS + WEEKLY DIGEST
+// ══════════════════════════════════════════════════════════
+function renderAlerts() {
+  const list = document.getElementById('alertsList');
+  if (!list) return;
+  const notable = getActivity().slice().reverse().filter(a => {
+    if (a.type === 'disaster') return true;
+    if (a.type === 'status') return (a.detail || '').includes('Completed');
+    if (a.type === 'comment') return true;
+    return false;
+  }).slice(0, 25);
+  if (!notable.length) {
+    list.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:13px;padding:24px 0;background:#fff;border-radius:10px;">No alerts yet on this device. Report a status update or emergency on any road to see it appear here.</div>';
+    return;
+  }
+  list.innerHTML = notable.map(a => {
+    const sev = a.type === 'disaster' ? 'sev-danger' : 'sev-info';
+    const icon = a.type === 'disaster' ? '🚨' : a.type === 'status' ? '✅' : '💬';
+    const when = new Date(a.ts).toLocaleString('en-GH', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+    return `<div class="alert-item ${sev}">
+      <span class="a-icon">${icon}</span>
+      <div>
+        <div class="a-title">${a.roadName}</div>
+        <div class="a-meta">${a.detail} · ${when}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function renderDigest() {
+  const grid = document.getElementById('digestGrid');
+  if (!grid) return;
+  const weekAgo = Date.now() - 7*24*60*60*1000;
+  const recent = getActivity().filter(a => a.ts >= weekAgo);
+  const disasters = recent.filter(a => a.type === 'disaster').length;
+  const reports = recent.filter(a => a.type === 'status' || a.type === 'comment').length;
+  const roadCounts = {};
+  recent.forEach(a => { roadCounts[a.roadName] = (roadCounts[a.roadName] || 0) + 1; });
+  const topRoad = Object.entries(roadCounts).sort((a,b) => b[1]-a[1])[0];
+  const ptsThisWeek = recent.reduce((s,a) => s + (a.points||0), 0);
+  grid.innerHTML = `
+    <div class="digest-card"><div class="digest-label">Citizen Reports (7 days)</div><div class="digest-value">${reports}</div></div>
+    <div class="digest-card" style="border-left-color:var(--red);"><div class="digest-label">Emergency Reports (7 days)</div><div class="digest-value">${disasters}</div></div>
+    <div class="digest-card" style="border-left-color:var(--green);"><div class="digest-label">Most Active Road</div><div class="digest-value" style="font-size:12px;">${topRoad ? topRoad[0] : '— none yet —'}</div></div>
+    <div class="digest-card" style="border-left-color:var(--gold);"><div class="digest-label">Your Points This Week</div><div class="digest-value">+${ptsThisWeek}</div></div>
+  `;
+}
+
+// ══════════════════════════════════════════════════════════
+// FEATURE 7 — OPEN DATA EXPORT
+// ══════════════════════════════════════════════════════════
+function buildOpenDataset() {
+  return contracts.map(c => ({
+    id: c.id, name: c.name, region: c.region, work_type: c.work_type,
+    contractor: c.contractor,
+    contractor_nationality: isGhanaian(c.contractor) === null ? '' : (isGhanaian(c.contractor) ? 'Ghanaian' : 'International'),
+    amount: c.amount, currency: c.currency, agency: c.agency, award_date: c.date,
+    source: c.source, flags: c.flags,
+  }));
+}
+function downloadJSON() {
+  const blob = new Blob([JSON.stringify(buildOpenDataset(), null, 2)], { type:'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'roadwatch-ghana-contracts.json';
+  a.click();
+  showToast('Downloaded JSON dataset');
+}
+function downloadCSV() {
+  const data = buildOpenDataset();
+  const cols = Object.keys(data[0]);
+  const esc = v => `"${String(v==null?'':v).replace(/"/g,'""')}"`;
+  const rows = [cols.join(',')].concat(data.map(r => cols.map(k => esc(r[k])).join(',')));
+  const blob = new Blob([rows.join('\n')], { type:'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'roadwatch-ghana-contracts.csv';
+  a.click();
+  showToast('Downloaded CSV dataset');
+}
+
+// ══════════════════════════════════════════════════════════
+// FEATURE 8 — CONTRACTOR DIRECTORY
+// ══════════════════════════════════════════════════════════
+function renderContractors(query) {
+  const grid = document.getElementById('contractorGrid');
+  if (!grid) return;
+  query = (query || '').toLowerCase();
+  const list = contractors
+    .filter(c => c.name.toLowerCase().includes(query))
+    .sort((a,b) => b.total_ghs - a.total_ghs);
+  grid.innerHTML = list.map((ct, i) => {
+    const regionsForContractor = [...new Set(contracts.filter(c => c.contractor === ct.name).map(c => c.region))];
+    const gh = isGhanaian(ct.name);
+    const badge = gh === null ? '' : gh ? '🇬🇭 Ghanaian firm' : '🌍 International firm';
+    return `<div class="contractor-card">
+      <div class="contractor-rank">#${i+1} by contract value</div>
+      <div class="contractor-name-c">${ct.name.replace('M/S ','').replace('MESSRS ','')}</div>
+      <div class="contractor-stat-row"><span>Contracts awarded</span><strong>${ct.count}</strong></div>
+      <div class="contractor-stat-row"><span>Total value</span><strong>GHS ${(ct.total_ghs/1e6).toFixed(1)}M</strong></div>
+      <div class="contractor-stat-row"><span>Regions</span><strong style="text-align:right;max-width:140px;">${regionsForContractor.join(', ') || '—'}</strong></div>
+      <div style="margin-top:8px;font-size:11px;font-weight:700;color:var(--green);">${badge}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════════
+// FEATURE 9 — ECOSYSTEM MODULE MODAL
+// ══════════════════════════════════════════════════════════
+const MODULE_INFO = {
+  schools:   { icon:'🏫', title:'Schools',   body:'Track new schools, classroom blocks, dormitories, libraries, and laboratories under construction across Ghana.' },
+  hospitals: { icon:'🏥', title:'Hospitals', body:'Track new hospitals, CHPS compounds, clinics, health centers, and regional hospitals.' },
+  water:     { icon:'💧', title:'Water Projects', body:'Track boreholes, water treatment plants, pipelines, and community water systems.' },
+  energy:    { icon:'⚡', title:'Energy',    body:'Track electricity extensions, solar projects, street lights, and rural electrification.' },
+  markets:   { icon:'🏛️', title:'Markets & Public Buildings', body:'Monitor markets, lorry stations, community centers, sports facilities, and government offices.' },
+};
+function showModuleModal(key) {
+  const m = MODULE_INFO[key];
+  document.getElementById('moduleModalTitle').textContent = `${m.icon} ${m.title} — Coming Soon`;
+  document.getElementById('moduleModalBody').innerHTML = `
+    <p style="font-size:14px;line-height:1.6;color:#333;">${m.body}</p>
+    <p style="font-size:13px;line-height:1.6;color:#333;margin-top:12px;">This module is part of the RoadWatch Ghana roadmap (Phase 5) and will launch once there is real, sourced project data for this sector — the same standard the Roads module already meets. No placeholder figures will be shown.</p>
+    <div style="background:#f0f8f4;border-radius:8px;padding:14px;margin-top:16px;font-size:12px;color:var(--green);font-weight:600;">Want to help bring verified ${m.title.toLowerCase()} data to RoadWatch Ghana? Reach out via the Contact Directory.</div>
+  `;
+  openModal('moduleModal');
+}
+
+// ══════════════════════════════════════════════════════════
+// FEATURE 10 — PHOTO ATTACHMENT + LIGHTBOX
+// ══════════════════════════════════════════════════════════
+let _pendingPhotoDataUrl = null;
+function handlePhotoSelect(evt) {
+  const file = evt.target.files[0];
+  if (!file) return;
+  if (!file.type.startsWith('image/')) { alert('Please choose an image file.'); return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const maxW = 480;
+      const scale = Math.min(1, maxW / img.width);
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      _pendingPhotoDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+      const preview = document.getElementById('commentPhotoPreview');
+      preview.src = _pendingPhotoDataUrl;
+      preview.style.display = 'inline-block';
+      document.getElementById('commentPhotoClear').style.display = 'inline';
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function clearPhotoSelect() {
+  _pendingPhotoDataUrl = null;
+  const input = document.getElementById('commentPhoto');
+  if (input) input.value = '';
+  const preview = document.getElementById('commentPhotoPreview');
+  if (preview) { preview.src = ''; preview.style.display = 'none'; }
+  const clearBtn = document.getElementById('commentPhotoClear');
+  if (clearBtn) clearBtn.style.display = 'none';
+}
+function openLightbox(src) {
+  document.getElementById('lightboxImg').src = src;
+  openModal('lightboxModal');
+}
+
+// ══════════════════════════════════════════════════════════
+// INIT — RoadWatch Ghana features
+// ══════════════════════════════════════════════════════════
+renderProfileWidget();
+renderAlerts();
+renderDigest();
+renderContractors('');
+document.getElementById('ddCountJson').textContent = contracts.length;
+document.getElementById('contractorSearch').addEventListener('input', e => renderContractors(e.target.value));
+
+window.showDisasterModal = showDisasterModal;
+window.selectDisasterType = selectDisasterType;
+window.submitDisaster = submitDisaster;
+window.showModuleModal = showModuleModal;
+window.saveProfileName = saveProfileName;
+window.handlePhotoSelect = handlePhotoSelect;
+window.clearPhotoSelect = clearPhotoSelect;
+window.openLightbox = openLightbox;
+window.downloadJSON = downloadJSON;
+window.downloadCSV = downloadCSV;
 </script>
 </body>
 </html>
