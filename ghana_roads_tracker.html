@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Know Your Roads — Ghana Big Push Road Tracker</title>
+<title>RoadWatch Ghana — See the Progress. Report the Truth.</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 <style>
@@ -215,6 +215,98 @@
   .action-btn.qr    { background:#e8eef8; color:#1e40af; border:1px solid #bfdbfe; }
   .action-btn.cmts  { background:#f3e8ff; color:#6d28d9; border:1px solid #ddd6fe; grid-column:1/-1; }
   .action-btn:hover { opacity:.85; }
+  .action-btn.sos { background:#fee2e2; color:var(--red); border:1px solid #fca5a5; grid-column:1/-1; }
+
+  /* HERO TAGLINE */
+  .hero-tagline { font-size:16px; font-weight:700; color:var(--gold); font-style:italic; margin-bottom:14px; }
+
+  /* NAV PROFILE PILL */
+  .nav-profile-pill { background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.35); color:#fff; font-size:12px; font-weight:700; padding:6px 12px; border-radius:20px; cursor:pointer; white-space:nowrap; }
+  .nav-profile-pill:hover { background:rgba(255,255,255,.25); }
+
+  /* ECOSYSTEM MODULE STRIP */
+  .module-strip { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:8px; }
+  .module-tile { background:#fff; border-radius:10px; padding:16px 10px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,.07); cursor:pointer; text-decoration:none; color:inherit; border:2px solid transparent; transition:all .15s; }
+  .module-tile:hover { border-color:var(--gold); transform:translateY(-2px); }
+  .module-tile.module-live { border-color:var(--green); background:#f0f8f4; }
+  .module-icon { font-size:28px; margin-bottom:6px; }
+  .module-name { font-weight:700; font-size:13px; margin-bottom:4px; }
+  .module-status { font-size:11px; color:var(--muted); font-weight:600; }
+  .module-status.live { color:var(--green); }
+
+  /* HEALTH SCORE */
+  .health-badge { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:800; padding:3px 9px; border-radius:12px; white-space:nowrap; }
+  .health-90, .health-80 { background:#d1fae5; color:#065f46; }
+  .health-60, .health-70 { background:#dbeafe; color:#1e40af; }
+  .health-40, .health-50 { background:#fef3c7; color:#92400e; }
+  .health-20, .health-30 { background:#fee2e2; color:#991b1b; }
+  .health-0, .health-10 { background:#fee2e2; color:#7f1d1d; }
+  .health-panel { background:#f5f5f0; border-radius:10px; padding:16px; margin:14px 0; }
+  .health-score-big { font-size:38px; font-weight:800; }
+  .health-row { display:flex; justify-content:space-between; align-items:center; font-size:12px; margin-top:8px; gap:10px; }
+  .health-bar-track { flex:1; height:8px; background:#e5e2d9; border-radius:4px; overflow:hidden; }
+  .health-bar-fill { height:100%; background:var(--green); border-radius:4px; }
+
+  /* REPUTATION / PROFILE */
+  .profile-card { background:linear-gradient(135deg,var(--green) 0%,#004d2e 100%); color:#fff; border-radius:14px; padding:22px; margin-bottom:20px; }
+  .profile-top { display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; }
+  .profile-badge-icon { font-size:40px; }
+  .profile-points { font-size:28px; font-weight:800; }
+  .profile-tier-name { font-size:14px; font-weight:700; color:var(--gold); }
+  .profile-progress-track { background:rgba(255,255,255,.2); height:10px; border-radius:5px; overflow:hidden; margin-top:14px; }
+  .profile-progress-fill { background:var(--gold); height:100%; border-radius:5px; transition:width .3s; }
+  .profile-progress-label { font-size:11px; opacity:.85; margin-top:6px; }
+  .tier-table { width:100%; border-collapse:collapse; margin-top:8px; }
+  .tier-table td, .tier-table th { padding:10px 12px; font-size:13px; border-bottom:1px solid var(--border); }
+  .tier-table th { text-align:left; color:var(--muted); font-size:11px; text-transform:uppercase; }
+  .tier-table tr.current-tier { background:#e8f5ee; font-weight:700; }
+  .trusted-badge { display:inline-block; background:#e0e7ff; color:#3730a3; font-size:10px; font-weight:800; padding:1px 7px; border-radius:8px; margin-left:5px; vertical-align:middle; }
+  .name-input-row { display:flex; gap:8px; margin-top:14px; }
+  .name-input-row input { flex:1; padding:8px 12px; border-radius:6px; border:none; font-size:13px; }
+  .name-input-row button { background:var(--gold); color:#000; border:none; border-radius:6px; padding:8px 16px; font-weight:700; cursor:pointer; font-size:13px; }
+
+  /* DISASTER / ALERTS */
+  .disaster-type-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:14px 0; }
+  .disaster-type-btn { border:2px solid var(--border); background:#fff; border-radius:10px; padding:12px 8px; cursor:pointer; text-align:center; font-size:12px; font-weight:600; }
+  .disaster-type-btn:hover, .disaster-type-btn.active-btn { border-color:var(--red); background:#fff0f0; }
+  .disaster-type-btn .s-icon { font-size:24px; display:block; margin-bottom:4px; }
+  .alerts-list { display:flex; flex-direction:column; gap:10px; }
+  .alert-item { background:#fff; border-radius:10px; padding:14px 16px; box-shadow:0 2px 8px rgba(0,0,0,.06); border-left:4px solid var(--border); display:flex; gap:12px; align-items:flex-start; }
+  .alert-item.sev-danger { border-left-color:var(--red); }
+  .alert-item.sev-info { border-left-color:var(--green); }
+  .alert-item .a-icon { font-size:20px; }
+  .alert-item .a-title { font-weight:700; font-size:13px; }
+  .alert-item .a-meta { font-size:11px; color:var(--muted); margin-top:2px; }
+  .digest-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin-bottom:20px; }
+  .digest-card { background:#fff; border-radius:10px; padding:16px; box-shadow:0 2px 8px rgba(0,0,0,.07); border-left:4px solid #8b5cf6; }
+  .digest-label { font-size:11px; color:var(--muted); text-transform:uppercase; margin-bottom:4px; }
+  .digest-value { font-size:15px; font-weight:700; }
+
+  /* OPEN DATA */
+  .opendata-box { background:#fff; border-radius:10px; padding:22px; box-shadow:0 2px 8px rgba(0,0,0,.07); }
+  .opendata-btns { display:flex; gap:12px; flex-wrap:wrap; margin:16px 0; }
+  .btn-data { background:var(--green); color:#fff; border:none; border-radius:8px; padding:12px 22px; font-weight:700; font-size:13px; cursor:pointer; }
+  .btn-data.csv { background:#2563eb; }
+  .btn-data:hover { opacity:.9; }
+
+  /* CONTRACTOR DIRECTORY */
+  .contractor-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:14px; }
+  .contractor-card { background:#fff; border-radius:10px; padding:16px; box-shadow:0 2px 8px rgba(0,0,0,.07); border-top:4px solid var(--green); }
+  .contractor-rank { font-size:11px; color:var(--muted); font-weight:700; }
+  .contractor-name-c { font-weight:700; font-size:13px; margin:4px 0 8px; line-height:1.3; }
+  .contractor-stat-row { display:flex; justify-content:space-between; font-size:12px; margin-top:4px; }
+
+  /* PHOTO ATTACH */
+  .photo-attach-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+  .photo-preview { max-width:80px; max-height:80px; border-radius:6px; display:none; }
+  .comment-photo { max-width:100%; border-radius:8px; margin-top:8px; cursor:pointer; display:block; }
+  .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--green); color:#fff; padding:12px 22px; border-radius:24px; font-size:13px; font-weight:700; box-shadow:0 4px 20px rgba(0,0,0,.25); z-index:2000; opacity:0; pointer-events:none; transition:all .25s; }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .nav-profile-pill { font-size:11px; padding:5px 9px; }
+  }
 </style>
 </head>
 <body>
@@ -222,27 +314,70 @@
 <nav>
   <div class="nav-logo">
     <div class="flag-strip"><span class="r"></span><span class="g"></span><span class="gr"></span></div>
-    Know Your Roads 🇬🇭
+    RoadWatch Ghana
   </div>
   <div class="nav-links">
     <a href="#overview">Overview</a>
-    <a href="#charts">By Region</a>
-    <a href="#timeline">Timeline</a>
+    <a href="#ecosystem">Ecosystem</a>
     <a href="#contracts">Road Projects</a>
-    <a href="#contacts">Contacts</a>
-    <a href="#about">Learn More</a>
+    <a href="#alerts">🚨 Alerts</a>
+    <a href="#community">🏆 Reputation</a>
+    <a href="#contractors">Contractors</a>
+    <a href="#opendata">Open Data</a>
+    <a href="#about">Mission</a>
   </div>
+  <a id="navProfilePill" class="nav-profile-pill" href="#community" title="Your reputation on this device">🌱 0 pts</a>
 </nav>
 
 <div class="hero">
-  <h1>🇬🇭 Know Your Roads — Ghana Big Push Tracker</h1>
-  <p>Find out which roads are being built or repaired in your community. Search by region, see who is doing the work, and share updates with family and friends across Ghana.</p>
+  <h1>🇬🇭 RoadWatch Ghana</h1>
+  <div class="hero-tagline">"See the Progress. Report the Truth."</div>
+  <p>Track public infrastructure projects across Ghana with real government contract data, citizen reports, and community verification — starting with the Big Push road programme. Search by region, see who is doing the work, report what you see on the ground, and share updates with your community.</p>
   <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:20px 0 8px;">
     <a href="#contracts" style="background:var(--gold);color:#000;font-weight:700;padding:11px 24px;border-radius:8px;text-decoration:none;font-size:15px;">🔍 Find Roads Near Me</a>
     <a href="#overview" style="background:rgba(255,255,255,0.15);color:#fff;font-weight:600;padding:11px 24px;border-radius:8px;text-decoration:none;font-size:15px;border:1px solid rgba(255,255,255,0.4);">📊 Programme Overview</a>
+    <button onclick="showDisasterModal()" style="background:var(--red);color:#fff;font-weight:700;padding:11px 24px;border-radius:8px;border:none;font-size:15px;cursor:pointer;">🚨 Report an Emergency</button>
   </div>
   <div class="hero-source">Data: Ghana Highway Authority · Urban Roads Dept · Dept of Feeder Roads · Programme launched 16 Sep 2025 · 81 confirmed road contracts</div>
 </div>
+
+<!-- ECOSYSTEM STRIP -->
+<section id="ecosystem" style="padding-top:24px;padding-bottom:0;">
+  <div class="section-title">🧭 The RoadWatch Ecosystem</div>
+  <div style="font-size:13px;color:var(--muted);margin-bottom:14px;">RoadWatch Ghana starts with roads and grows into a full public-infrastructure monitor. Roads is live today — the rest are on the roadmap.</div>
+  <div class="module-strip">
+    <a href="#contracts" class="module-tile module-live">
+      <div class="module-icon">🛣️</div>
+      <div class="module-name">Roads</div>
+      <div class="module-status live">Live · 91 projects</div>
+    </a>
+    <div class="module-tile" onclick="showModuleModal('schools')">
+      <div class="module-icon">🏫</div>
+      <div class="module-name">Schools</div>
+      <div class="module-status">Coming Soon</div>
+    </div>
+    <div class="module-tile" onclick="showModuleModal('hospitals')">
+      <div class="module-icon">🏥</div>
+      <div class="module-name">Hospitals</div>
+      <div class="module-status">Coming Soon</div>
+    </div>
+    <div class="module-tile" onclick="showModuleModal('water')">
+      <div class="module-icon">💧</div>
+      <div class="module-name">Water</div>
+      <div class="module-status">Coming Soon</div>
+    </div>
+    <div class="module-tile" onclick="showModuleModal('energy')">
+      <div class="module-icon">⚡</div>
+      <div class="module-name">Energy</div>
+      <div class="module-status">Coming Soon</div>
+    </div>
+    <div class="module-tile" onclick="showModuleModal('markets')">
+      <div class="module-icon">🏛️</div>
+      <div class="module-name">Markets &amp; Public Buildings</div>
+      <div class="module-status">Coming Soon</div>
+    </div>
+  </div>
+</section>
 
 <!-- STATS -->
 <div id="stats-bar-anchor" class="stats-bar">
@@ -481,8 +616,85 @@
   <div class="contacts-grid" id="contactsGrid"></div>
 </section>
 
+<!-- ALERTS -->
+<section id="alerts">
+  <div class="section-title">🚨 Public Alerts &amp; This Week in RoadWatch</div>
+  <div style="font-size:13px;color:var(--muted);margin-bottom:16px;">Emergencies and notable updates reported by citizens on this device, plus a live digest of the last 7 days. See something urgent? <a href="#" onclick="showDisasterModal();return false;" style="color:var(--red);font-weight:700;">Report it now →</a></div>
+  <div class="digest-grid" id="digestGrid"></div>
+  <div class="alerts-list" id="alertsList"></div>
+</section>
+
+<!-- COMMUNITY / REPUTATION -->
+<section id="community">
+  <div class="section-title">🏆 Community &amp; Reputation</div>
+  <div style="font-size:13px;color:var(--muted);margin-bottom:16px;">Citizens become the inspectors. Earn reputation points for reporting road status, adding verified detail, and flagging emergencies — climb the tiers below.</div>
+  <div class="profile-card">
+    <div class="profile-top">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div class="profile-badge-icon" id="profileBadgeIcon">🌱</div>
+        <div>
+          <div class="profile-tier-name" id="profileTierName">Newcomer</div>
+          <div class="profile-points" id="profilePoints">0 pts</div>
+        </div>
+      </div>
+      <div style="font-size:12px;opacity:.85;text-align:right;max-width:240px;" id="profileStatsText"></div>
+    </div>
+    <div class="profile-progress-track"><div class="profile-progress-fill" id="profileProgressFill" style="width:0%;"></div></div>
+    <div class="profile-progress-label" id="profileProgressLabel"></div>
+    <div class="name-input-row">
+      <input type="text" id="profileNameInput" placeholder="Set a display name for your reports (optional)">
+      <button onclick="saveProfileName()">Save</button>
+    </div>
+  </div>
+  <div style="background:#fff;border-radius:10px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.07);">
+    <div style="font-weight:700;margin-bottom:6px;">Reputation Tiers</div>
+    <table class="tier-table" id="tierTable"></table>
+    <p style="font-size:11px;color:#aaa;margin-top:14px;">Reputation is tracked on your device for this demo. A national leaderboard across all citizens requires user accounts and a backend (see Phase 2–3 of the roadmap) and isn't live yet — we won't show you a fake one.</p>
+  </div>
+</section>
+
+<!-- CONTRACTOR DIRECTORY -->
+<section id="contractors">
+  <div class="section-title">🏗️ Contractor Directory</div>
+  <div style="font-size:13px;color:var(--muted);margin-bottom:16px;">Every contractor awarded a Big Push contract, ranked by total contract value in this dataset. This is an award-history summary derived from disclosed contracts — not a completion or delay performance rating, since that data hasn't been publicly disclosed yet.</div>
+  <input type="text" class="search-box" id="contractorSearch" placeholder="Search contractors…" style="margin-bottom:16px;max-width:400px;">
+  <div class="contractor-grid" id="contractorGrid"></div>
+</section>
+
+<!-- OPEN DATA -->
+<section id="opendata">
+  <div class="section-title">📦 Open Data</div>
+  <div class="opendata-box">
+    <p style="font-size:13px;color:#333;line-height:1.6;">Every contract in this tracker is available for download and reuse — for researchers, journalists, and developers. Data is collated from Right to Information (RTI) disclosures published by <em>The Fourth Estate</em> and the Ministry of Roads &amp; Highways' official Big Push list. Free to reuse with attribution; RoadWatch Ghana adds no additional restrictions.</p>
+    <div class="opendata-btns">
+      <button class="btn-data" onclick="downloadJSON()">⬇️ Download JSON (<span id="ddCountJson">91</span> records)</button>
+      <button class="btn-data csv" onclick="downloadCSV()">⬇️ Download CSV</button>
+    </div>
+    <p style="font-size:11px;color:#aaa;">Fields: id, name, region, work_type, contractor, contractor_nationality, amount, currency, agency, award_date, est_completion, source, flags. Last updated: March 2026.</p>
+  </div>
+</section>
+
 <!-- ABOUT -->
 <section id="about">
+  <div class="section-title">🇬🇭 About RoadWatch Ghana</div>
+  <div style="background:var(--card);border-radius:10px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,.07);line-height:1.7;font-size:14px;color:#333;margin-bottom:20px;">
+    <p><strong>Mission.</strong> RoadWatch Ghana empowers every citizen to monitor public infrastructure projects by providing real-time, verified updates through community reporting, official data, and (in future phases) artificial intelligence.</p>
+    <br>
+    <p><strong>Vision.</strong> To become Ghana's largest public platform for tracking government infrastructure projects, increasing transparency, accountability, and citizen participation.</p>
+    <br>
+    <p><strong>Core Objectives</strong></p>
+    <ul style="margin-left:18px;margin-top:6px;">
+      <li>Increase transparency around how public money is spent on infrastructure</li>
+      <li>Reduce abandoned projects by keeping every contract visible</li>
+      <li>Encourage citizen participation in monitoring public works</li>
+      <li>Provide reliable, sourced information — not rumour</li>
+      <li>Help government agencies monitor contractor performance</li>
+      <li>Build public trust between citizens, contractors, and government</li>
+    </ul>
+    <br>
+    <p style="font-size:12px;color:var(--muted);">RoadWatch Ghana currently tracks roads with real, sourced contract data. Schools, Hospitals, Water, Energy, and Markets &amp; Public Buildings are part of the long-term roadmap (see the Ecosystem section above) and will only launch with real, verified project data — never placeholder figures.</p>
+  </div>
+
   <div class="section-title">📚 Learn More — Citizen's Guide to the Big Push</div>
   <div style="background:var(--card);border-radius:10px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,.07);line-height:1.7;font-size:14px;color:#333;">
 
@@ -523,9 +735,9 @@
 </section>
 
 <footer>
-  <strong>Know Your Roads 🇬🇭</strong> — Ghana Big Push Road Tracker<br>
+  <strong>RoadWatch Ghana 🇬🇭</strong> — "See the Progress. Report the Truth."<br>
   <span style="opacity:.9;margin-top:4px;display:block;">Built for every Ghanaian citizen · Share this page with your community · Data: GHA · URD · DFR via RTI</span>
-  <span style="font-size:11px;opacity:.6;margin-top:6px;display:block;">Independent education tool. Not affiliated with any government agency. Sources: The Fourth Estate · Ghana Highway Authority · Ministry of Roads and Highways · Parliament of Ghana.</span>
+  <span style="font-size:11px;opacity:.6;margin-top:6px;display:block;">Independent citizen platform, formerly Know Your Roads Ghana. Not affiliated with any government agency. Sources: The Fourth Estate · Ghana Highway Authority · Ministry of Roads and Highways · Parliament of Ghana. Community reports, reputation points, and alerts are generated by site visitors and stored on your own device — they are not verified government data.</span>
 </footer>
 
 <script>
@@ -885,7 +1097,7 @@ function render() {
       <td>${c.id}</td>
       <td>
         <div class="proj-name">${c.name}</div>
-        <div style="margin-top:3px;">${sourceBadge(c)}</div>
+        <div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap;">${sourceBadge(c)}${healthBadgeHtml(c)}</div>
         <div id="counts-${c.id}">${buildCountsHtml(getReports(c.id))}</div>
       </td>
       <td><span class="region-pill">${c.region||'—'}</span></td>
@@ -905,6 +1117,7 @@ function render() {
           <button class="action-btn seen"  onclick="showStatusModal(${c.id})">👁️ I Saw This</button>
           <button class="action-btn qr"    onclick="showQRModal(${c.id})">📱 QR</button>
           <button class="action-btn cmts"  onclick="showCommentsModal(${c.id})">💬 <span id="cbadge-${c.id}"></span>Comments</button>
+          <button class="action-btn sos"   onclick="showDisasterModal(${c.id})">🚨 Report Emergency</button>
         </div>
         <div class="flag-chips" style="margin-top:4px;">${chipHtml(c.flags)}</div>
       </td>
@@ -1005,6 +1218,67 @@ function buildCountsHtml(r) {
   return html;
 }
 
+// ══════════════════════════════════════════════════════════
+// ROAD HEALTH SCORE (needed by render() — defined before second
+// script loads. Transparent formula, no fabricated inputs:
+// government data confidence + real citizen activity on this device.)
+// ══════════════════════════════════════════════════════════
+function getDisasters(id) {
+  return JSON.parse(localStorage.getItem('rw_disasters_' + id) || '[]');
+}
+function healthScore(c) {
+  const dataConfidence = c.source === 'RTI Data' ? 100 : 70;
+  const r = getReports(c.id);
+  const totalVotes = r.wip + r.nw + r.done;
+  const engagement = Math.min(100, totalVotes * 15);
+  const verifiedRatio = totalVotes ? Math.round(r.done / totalVotes * 100) : null;
+  const commentCount = getComments(c.id).length;
+  const commentScore = Math.min(100, commentCount * 10);
+  const disasters = getDisasters(c.id).length;
+  const disasterPenalty = Math.min(40, disasters * 15);
+  let overall;
+  if (totalVotes === 0 && commentCount === 0) {
+    overall = dataConfidence - disasterPenalty;
+  } else {
+    overall = (dataConfidence * 0.30) + (engagement * 0.25) + ((verifiedRatio ?? 50) * 0.20) + (commentScore * 0.25) - disasterPenalty;
+  }
+  overall = Math.max(0, Math.min(100, Math.round(overall)));
+  return { overall, dataConfidence, engagement, verifiedRatio, commentScore, disasters, disasterPenalty, totalVotes, commentCount };
+}
+function healthLabel(score) {
+  if (score >= 80) return ['Excellent', '#065f46'];
+  if (score >= 60) return ['Good', '#1e40af'];
+  if (score >= 40) return ['Fair', '#92400e'];
+  if (score >= 20) return ['Needs Attention', '#991b1b'];
+  return ['Critical', '#7f1d1d'];
+}
+function healthBadgeHtml(c, prefix) {
+  prefix = prefix || '';
+  const h = healthScore(c);
+  const bucket = Math.floor(h.overall / 10) * 10;
+  const label = healthLabel(h.overall)[0];
+  return `<span id="health-${prefix}${c.id}" class="health-badge health-${bucket}" title="Road Health Score: ${label}">💚 ${h.overall}/100</span>`;
+}
+function healthPanelHtml(c) {
+  const h = healthScore(c);
+  const [label, color] = healthLabel(h.overall);
+  const row = (lbl, val) => `<div class="health-row"><span style="min-width:160px;">${lbl}</span><div class="health-bar-track"><div class="health-bar-fill" style="width:${val}%;"></div></div><span style="min-width:32px;text-align:right;">${Math.round(val)}</span></div>`;
+  return `<div class="health-panel">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <div class="health-score-big" style="color:${color};">${h.overall}</div>
+      <div>
+        <div style="font-weight:700;color:${color};">${label} · Road Health Score</div>
+        <div style="font-size:11px;color:var(--muted);">Combines government data confidence, citizen report volume, verified-completion ratio, and comment activity${h.disasters ? ', minus open emergency reports' : ''}. Reports are from this device.</div>
+      </div>
+    </div>
+    ${row('Government data confidence', h.dataConfidence)}
+    ${row('Community engagement', h.engagement)}
+    ${row('Verified-completion ratio', h.verifiedRatio ?? 50)}
+    ${row('Comment activity', h.commentScore)}
+    ${h.disasters ? `<div style="font-size:11px;color:var(--red);margin-top:8px;font-weight:700;">⚠️ ${h.disasters} open emergency report${h.disasters > 1 ? 's' : ''} reported on this road (−${h.disasterPenalty} pts)</div>` : ''}
+  </div>`;
+}
+
 applyFilters();
 
 // ═══════════════════════════════════════════════════════════
@@ -1052,12 +1326,14 @@ function renderCards() {
         </div>
       </div>
       <div style="font-size:12px;"><strong>Investment:</strong> ${fmt(c)}</div>
+      <div style="margin-top:2px;">${healthBadgeHtml(c, 'card-')}</div>
       <div id="counts-card-${c.id}">${buildCountsHtml(getReports(c.id))}</div>
       <div class="card-actions">
         <button class="card-btn card-btn-share" onclick="shareProject(${c.id})">📤 Share</button>
         <button class="card-btn card-btn-seen"  onclick="showStatusModal(${c.id})">👁️ I Saw This</button>
         <button class="card-btn card-btn-qr"    onclick="showQRModal(${c.id})">📱 QR</button>
         <button class="card-btn card-btn-cmts"  onclick="showCommentsModal(${c.id})">💬 <span id="cbadge-card-${c.id}">${getComments(c.id).length > 0 ? getComments(c.id).length + ' ' : ''}</span>Comments</button>
+        <button class="card-btn" style="background:#fee2e2;color:var(--red);border:1px solid #fca5a5;" onclick="showDisasterModal(${c.id})">🚨 Report Emergency</button>
       </div>
     </div>`;
   }).join('');
@@ -1252,6 +1528,7 @@ showContacts('gha');
       <button class="modal-close" onclick="closeModal('statusModal')">✕</button>
     </div>
     <div class="modal-body">
+      <div id="statusHealthPanel"></div>
       <div class="status-btns">
         <button class="status-btn" onclick="submitStatus('wip')" id="btn-wip">
           <span class="s-icon">🚧</span>Work in Progress
@@ -1265,8 +1542,9 @@ showContacts('gha');
       </div>
       <div id="statusModalCounts" style="text-align:center;margin-top:8px;font-size:13px;color:var(--muted);"></div>
       <div id="statusThanks" style="display:none;text-align:center;padding:14px;background:#e8f5ee;border-radius:8px;margin-top:12px;font-weight:700;color:var(--green);">
-        ✅ Thank you! Your report has been recorded.
+        ✅ Thank you! Your report has been recorded. <span id="statusPointsEarned"></span>
       </div>
+      <button class="card-btn" style="width:100%;margin-top:12px;background:#fee2e2;color:var(--red);border:1px solid #fca5a5;font-weight:700;padding:10px;border-radius:8px;cursor:pointer;" onclick="closeModal('statusModal');showDisasterModal(activeContractId);">🚨 Report an emergency on this road instead</button>
       <p style="font-size:11px;color:#aaa;margin-top:16px;text-align:center;">One report per road, per device. Reports are stored on your device only in this version.</p>
     </div>
   </div>
@@ -1328,12 +1606,76 @@ showContacts('gha');
           <option value="stopped">⛔ Work has stopped</option>
         </select>
         <textarea id="commentText" placeholder="Describe what you saw, e.g. 'As of March 2026, machines are on site near Accra junction. Workers present daily.' Photos or details welcome."></textarea>
+        <div class="photo-attach-row">
+          <label class="card-btn" style="background:#ede9fe;color:#6d28d9;border:1px solid #c4b5fd;padding:9px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;">
+            📷 Attach a photo (optional)
+            <input type="file" id="commentPhoto" accept="image/*" style="display:none;" onchange="handlePhotoSelect(event)">
+          </label>
+          <img id="commentPhotoPreview" class="photo-preview">
+          <span id="commentPhotoClear" style="display:none;color:var(--red);font-size:12px;cursor:pointer;font-weight:700;" onclick="clearPhotoSelect()">✕ Remove</span>
+        </div>
         <button class="btn-submit" onclick="submitComment()">📤 Submit Report</button>
       </div>
-      <p style="font-size:11px;color:#aaa;margin-top:12px;">Reports are saved on this device. Share the page link so others can see your community's updates.</p>
+      <p style="font-size:11px;color:#aaa;margin-top:12px;">Reports are saved on this device. Share the page link so others can see your community's updates. +8 reputation points for a report, +10 bonus for a photo.</p>
     </div>
   </div>
 </div>
+
+<!-- ══════════════════════════════════════════════════════════
+     MODAL 4 — DISASTER / EMERGENCY REPORT
+══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="disasterModal">
+  <div class="modal-box">
+    <div class="modal-header" style="background:var(--red);">
+      <div>
+        <h2>🚨 Report an Emergency</h2>
+        <div style="font-size:12px;opacity:.85;margin-top:3px;">Collapsed bridges, flooded roads, washed-away culverts, dangerous potholes, or broken traffic lights</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('disasterModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="comment-form">
+        <select id="disasterRoad"></select>
+      </div>
+      <div class="disaster-type-grid" id="disasterTypeGrid"></div>
+      <div class="comment-form">
+        <textarea id="disasterNote" placeholder="Describe the emergency — location details, how urgent, anyone affected…"></textarea>
+        <button class="btn-submit" style="background:var(--red);" onclick="submitDisaster()">🚨 Submit Emergency Report</button>
+      </div>
+      <p style="font-size:11px;color:#aaa;margin-top:10px;text-align:center;">This report is stored on your device and shown in the Public Alerts feed on this page. For life-threatening emergencies, also call the Ghana Highway Authority hotline <strong>0800-111-789</strong> or the National Emergency Number <strong>112</strong>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     MODAL 5 — ECOSYSTEM MODULE "COMING SOON"
+══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="moduleModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div><h2 id="moduleModalTitle">Coming Soon</h2></div>
+      <button class="modal-close" onclick="closeModal('moduleModal')">✕</button>
+    </div>
+    <div class="modal-body" id="moduleModalBody"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     MODAL 6 — PHOTO LIGHTBOX
+══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="lightboxModal">
+  <div class="modal-box" style="max-width:640px;">
+    <div class="modal-header">
+      <div><h2>📷 Citizen Photo</h2></div>
+      <button class="modal-close" onclick="closeModal('lightboxModal')">✕</button>
+    </div>
+    <div class="modal-body" style="text-align:center;">
+      <img id="lightboxImg" style="max-width:100%;border-radius:8px;">
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
 // ══════════════════════════════════════════════════════════
@@ -1361,6 +1703,7 @@ function showStatusModal(id) {
     document.getElementById('btn-' + s).classList.toggle('active-btn', r.myVote === s);
   });
   renderStatusCounts(r);
+  document.getElementById('statusHealthPanel').innerHTML = healthPanelHtml(c);
   openModal('statusModal');
 }
 
@@ -1373,15 +1716,22 @@ function renderStatusCounts(r) {
 
 function submitStatus(status) {
   const id = activeContractId;
+  const c = contracts.find(x => x.id === id);
   const r = getReports(id);
+  const isNewVote = r.myVote !== status;
   if (r.myVote && r.myVote !== status) { r[r.myVote] = Math.max(0, r[r.myVote] - 1); }
   if (r.myVote !== status) { r[status]++; r.myVote = status; }
   saveReports(id, r);
   ['wip','nw','done'].forEach(s => document.getElementById('btn-'+s).classList.toggle('active-btn', s === status));
   renderStatusCounts(r);
   document.getElementById('statusThanks').style.display = 'block';
+  document.getElementById('statusPointsEarned').textContent = isNewVote ? '(+5 reputation)' : '';
+  if (isNewVote) {
+    logActivity('status', id, c.name, statusLabels[status] || status, 5);
+  }
   // Update inline counts in table
   updateInlineCounts(id, r);
+  document.getElementById('statusHealthPanel').innerHTML = healthPanelHtml(c);
 }
 
 function updateInlineCounts(id, r) {
@@ -1389,6 +1739,11 @@ function updateInlineCounts(id, r) {
   if (el) el.innerHTML = buildCountsHtml(r);
   const elCard = document.getElementById('counts-card-' + id);
   if (elCard) elCard.innerHTML = buildCountsHtml(r);
+  const hb = document.getElementById('health-' + id);
+  const c = contracts.find(x => x.id === id);
+  if (hb && c) hb.outerHTML = healthBadgeHtml(c);
+  const hbCard = document.getElementById('health-card-' + id);
+  if (hbCard && c) hbCard.outerHTML = healthBadgeHtml(c, 'card-');
 }
 
 // ══════════════════════════════════════════════════════════
@@ -1455,9 +1810,10 @@ function showCommentsModal(id) {
   activeContractId = id;
   const c = contracts.find(x => x.id === id);
   document.getElementById('commentsModalTitle').textContent = '💬 ' + c.name;
-  document.getElementById('commentName').value = '';
+  document.getElementById('commentName').value = getProfile().name || '';
   document.getElementById('commentStatus').value = '';
   document.getElementById('commentText').value = '';
+  clearPhotoSelect();
   renderComments(id);
   openModal('commentsModal');
 }
@@ -1471,35 +1827,51 @@ function renderComments(id) {
   }
   thread.innerHTML = comments.slice().reverse().map(cm => {
     const statusBadge = cm.status ? `<span class="comment-status-badge" style="background:${statusBgMap[cm.status]||'#eee'};color:${statusClrMap[cm.status]||'#333'}">${statusLabels[cm.status]||cm.status}</span>` : '';
+    const trustedBadge = cm.trusted ? '<span class="trusted-badge">✅ Trusted Reporter</span>' : '';
+    const photoHtml = cm.photo ? `<img src="${cm.photo}" class="comment-photo" onclick="openLightbox('${cm.photo}')">` : '';
     return `<div class="comment-card">
-      <div class="comment-meta">${cm.name || 'Anonymous'} &nbsp;·&nbsp; ${cm.date}${statusBadge}</div>
+      <div class="comment-meta">${cm.name || 'Anonymous'}${trustedBadge} &nbsp;·&nbsp; ${cm.date}${statusBadge}</div>
       <div>${cm.text}</div>
+      ${photoHtml}
     </div>`;
   }).join('');
 }
 
 function submitComment() {
   const id = activeContractId;
+  const c = contracts.find(x => x.id === id);
   const name = document.getElementById('commentName').value.trim() || 'Anonymous';
   const status = document.getElementById('commentStatus').value;
   const text = document.getElementById('commentText').value.trim();
   if (!text) { alert('Please describe what you saw before submitting.'); return; }
   const comments = getComments(id);
   const now = new Date();
-  comments.push({
+  const profile = getProfile();
+  const entry = {
     name, status, text,
-    date: now.toLocaleDateString('en-GH', { day:'numeric', month:'short', year:'numeric' })
-  });
+    date: now.toLocaleDateString('en-GH', { day:'numeric', month:'short', year:'numeric' }),
+    trusted: profile.points >= 750,
+  };
+  if (_pendingPhotoDataUrl) entry.photo = _pendingPhotoDataUrl;
+  comments.push(entry);
+  // Cap stored photos per road at 8 (drop oldest photo data, keep text) to protect device storage
+  const withPhoto = comments.filter(x => x.photo);
+  if (withPhoto.length > 8) {
+    for (let i = 0; i < withPhoto.length - 8; i++) delete withPhoto[i].photo;
+  }
   saveComments(id, comments);
+  const pts = entry.photo ? 18 : 8;
+  logActivity('comment', id, c.name, text.slice(0,80), pts);
   document.getElementById('commentText').value = '';
-  document.getElementById('commentName').value = '';
   document.getElementById('commentStatus').value = '';
+  clearPhotoSelect();
   renderComments(id);
   // update comment badge in table and card view
   const badge = document.getElementById('cbadge-' + id);
   if (badge) { badge.textContent = comments.length + ' '; badge.style.display = 'inline'; }
   const badgeCard = document.getElementById('cbadge-card-' + id);
   if (badgeCard) { badgeCard.textContent = comments.length + ' '; }
+  updateInlineCounts(id, getReports(id));
 }
 
 window.showStatusModal = showStatusModal;
@@ -1510,6 +1882,349 @@ window.submitStatus = submitStatus;
 window.submitComment = submitComment;
 window.printQR = printQR;
 window.downloadQR = downloadQR;
+
+// ══════════════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════════════
+let toastTimer = null;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  if (!t) return;
+  clearTimeout(toastTimer);
+  t.textContent = msg;
+  t.classList.add('show');
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// ══════════════════════════════════════════════════════════
+// FEATURE 4 — REPUTATION / GAMIFICATION (device-local)
+// ══════════════════════════════════════════════════════════
+const BADGE_TIERS = [
+  { name: 'Newcomer',            min: 0,     icon: '🌱' },
+  { name: 'Bronze Reporter',     min: 50,    icon: '🥉' },
+  { name: 'Silver Reporter',     min: 250,   icon: '🥈' },
+  { name: 'Gold Reporter',       min: 750,   icon: '🥇' },
+  { name: 'Diamond Reporter',    min: 2000,  icon: '💎' },
+  { name: 'National Ambassador', min: 10000, icon: '🏅' },
+];
+function getProfile() {
+  return JSON.parse(localStorage.getItem('rw_profile') || '{"points":0,"name":""}');
+}
+function saveProfile(p) { localStorage.setItem('rw_profile', JSON.stringify(p)); }
+function currentTier(points) {
+  let tier = BADGE_TIERS[0], next = BADGE_TIERS[1] || null;
+  for (let i = 0; i < BADGE_TIERS.length; i++) {
+    if (points >= BADGE_TIERS[i].min) { tier = BADGE_TIERS[i]; next = BADGE_TIERS[i+1] || null; }
+  }
+  return { tier, next };
+}
+function awardPoints(n, reason) {
+  const p = getProfile();
+  const before = currentTier(p.points).tier;
+  p.points += n;
+  saveProfile(p);
+  const after = currentTier(p.points).tier;
+  renderProfileWidget();
+  showToast(`+${n} reputation — ${reason}`);
+  if (after.name !== before.name) {
+    setTimeout(() => showToast(`🎉 New tier unlocked: ${after.icon} ${after.name}!`), 1700);
+  }
+}
+function saveProfileName() {
+  const p = getProfile();
+  p.name = document.getElementById('profileNameInput').value.trim();
+  saveProfile(p);
+  showToast('Display name saved');
+}
+function renderProfileWidget() {
+  const p = getProfile();
+  const { tier, next } = currentTier(p.points);
+  const pill = document.getElementById('navProfilePill');
+  if (pill) pill.textContent = `${tier.icon} ${p.points} pts`;
+  const icon = document.getElementById('profileBadgeIcon');
+  if (icon) icon.textContent = tier.icon;
+  const tierNameEl = document.getElementById('profileTierName');
+  if (tierNameEl) tierNameEl.textContent = tier.name;
+  const pointsEl = document.getElementById('profilePoints');
+  if (pointsEl) pointsEl.textContent = p.points.toLocaleString() + ' pts';
+  const fill = document.getElementById('profileProgressFill');
+  const label = document.getElementById('profileProgressLabel');
+  if (fill && label) {
+    if (next) {
+      const span = next.min - tier.min;
+      const progressed = p.points - tier.min;
+      const pct = Math.max(0, Math.min(100, Math.round(progressed / span * 100)));
+      fill.style.width = pct + '%';
+      label.textContent = `${(next.min - p.points).toLocaleString()} points to ${next.icon} ${next.name}`;
+    } else {
+      fill.style.width = '100%';
+      label.textContent = 'Maximum tier reached — you are a National Ambassador!';
+    }
+  }
+  const nameInput = document.getElementById('profileNameInput');
+  if (nameInput && document.activeElement !== nameInput) nameInput.value = p.name || '';
+  const statsEl = document.getElementById('profileStatsText');
+  if (statsEl) statsEl.textContent = `${getActivity().length} activities logged on this device`;
+  const tierTable = document.getElementById('tierTable');
+  if (tierTable) {
+    tierTable.innerHTML = '<tr><th>Tier</th><th>Points</th><th></th></tr>' + BADGE_TIERS.map(t => `
+      <tr class="${t.name===tier.name?'current-tier':''}">
+        <td>${t.icon} ${t.name}</td>
+        <td>${t.min.toLocaleString()}+</td>
+        <td>${t.name===tier.name?'← You are here':''}</td>
+      </tr>`).join('');
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// ACTIVITY LOG — powers Alerts, Weekly Digest, and Reputation
+// ══════════════════════════════════════════════════════════
+function getActivity() {
+  return JSON.parse(localStorage.getItem('rw_activity') || '[]');
+}
+function logActivity(type, roadId, roadName, detail, points) {
+  const activity = getActivity();
+  activity.push({ type, roadId, roadName, detail, points: points || 0, ts: Date.now() });
+  if (activity.length > 500) activity.splice(0, activity.length - 500);
+  localStorage.setItem('rw_activity', JSON.stringify(activity));
+  if (points) awardPoints(points, detail);
+  renderAlerts();
+  renderDigest();
+}
+
+// ══════════════════════════════════════════════════════════
+// FEATURE 5 — DISASTER / EMERGENCY REPORTING
+// ══════════════════════════════════════════════════════════
+const DISASTER_TYPES = [
+  { key:'bridge',       icon:'🌉', label:'Collapsed Bridge' },
+  { key:'flood',        icon:'🌊', label:'Flooded Road' },
+  { key:'culvert',      icon:'🕳️', label:'Washed-Away Culvert' },
+  { key:'pothole',      icon:'⚠️', label:'Dangerous Pothole' },
+  { key:'trafficlight', icon:'🚦', label:'Broken Traffic Light' },
+];
+let _disasterSelectedType = null;
+function showDisasterModal(roadId) {
+  const sel = document.getElementById('disasterRoad');
+  sel.innerHTML = contracts.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+  if (roadId) sel.value = roadId;
+  _disasterSelectedType = null;
+  document.getElementById('disasterTypeGrid').innerHTML = DISASTER_TYPES.map(t => `
+    <button type="button" class="disaster-type-btn" id="dtype-${t.key}" onclick="selectDisasterType('${t.key}')">
+      <span class="s-icon">${t.icon}</span>${t.label}
+    </button>`).join('');
+  document.getElementById('disasterNote').value = '';
+  openModal('disasterModal');
+}
+function selectDisasterType(key) {
+  _disasterSelectedType = key;
+  DISASTER_TYPES.forEach(t => document.getElementById('dtype-'+t.key).classList.toggle('active-btn', t.key === key));
+}
+function submitDisaster() {
+  const roadId = parseInt(document.getElementById('disasterRoad').value, 10);
+  const c = contracts.find(x => x.id === roadId);
+  const note = document.getElementById('disasterNote').value.trim();
+  if (!_disasterSelectedType) { alert('Please select what kind of emergency you are reporting.'); return; }
+  if (!note) { alert('Please add a short description of the emergency.'); return; }
+  const typeInfo = DISASTER_TYPES.find(t => t.key === _disasterSelectedType);
+  const list = getDisasters(roadId);
+  list.push({ type: _disasterSelectedType, label: typeInfo.label, note, ts: Date.now() });
+  localStorage.setItem('rw_disasters_' + roadId, JSON.stringify(list));
+  logActivity('disaster', roadId, c.name, `${typeInfo.icon} ${typeInfo.label}: ${note.slice(0,80)}`, 12);
+  updateInlineCounts(roadId, getReports(roadId));
+  closeModal('disasterModal');
+  showToast('🚨 Emergency reported — thank you for keeping citizens safe');
+}
+
+// ══════════════════════════════════════════════════════════
+// FEATURE 6 — PUBLIC ALERTS + WEEKLY DIGEST
+// ══════════════════════════════════════════════════════════
+function renderAlerts() {
+  const list = document.getElementById('alertsList');
+  if (!list) return;
+  const notable = getActivity().slice().reverse().filter(a => {
+    if (a.type === 'disaster') return true;
+    if (a.type === 'status') return (a.detail || '').includes('Completed');
+    if (a.type === 'comment') return true;
+    return false;
+  }).slice(0, 25);
+  if (!notable.length) {
+    list.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:13px;padding:24px 0;background:#fff;border-radius:10px;">No alerts yet on this device. Report a status update or emergency on any road to see it appear here.</div>';
+    return;
+  }
+  list.innerHTML = notable.map(a => {
+    const sev = a.type === 'disaster' ? 'sev-danger' : 'sev-info';
+    const icon = a.type === 'disaster' ? '🚨' : a.type === 'status' ? '✅' : '💬';
+    const when = new Date(a.ts).toLocaleString('en-GH', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+    return `<div class="alert-item ${sev}">
+      <span class="a-icon">${icon}</span>
+      <div>
+        <div class="a-title">${a.roadName}</div>
+        <div class="a-meta">${a.detail} · ${when}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function renderDigest() {
+  const grid = document.getElementById('digestGrid');
+  if (!grid) return;
+  const weekAgo = Date.now() - 7*24*60*60*1000;
+  const recent = getActivity().filter(a => a.ts >= weekAgo);
+  const disasters = recent.filter(a => a.type === 'disaster').length;
+  const reports = recent.filter(a => a.type === 'status' || a.type === 'comment').length;
+  const roadCounts = {};
+  recent.forEach(a => { roadCounts[a.roadName] = (roadCounts[a.roadName] || 0) + 1; });
+  const topRoad = Object.entries(roadCounts).sort((a,b) => b[1]-a[1])[0];
+  const ptsThisWeek = recent.reduce((s,a) => s + (a.points||0), 0);
+  grid.innerHTML = `
+    <div class="digest-card"><div class="digest-label">Citizen Reports (7 days)</div><div class="digest-value">${reports}</div></div>
+    <div class="digest-card" style="border-left-color:var(--red);"><div class="digest-label">Emergency Reports (7 days)</div><div class="digest-value">${disasters}</div></div>
+    <div class="digest-card" style="border-left-color:var(--green);"><div class="digest-label">Most Active Road</div><div class="digest-value" style="font-size:12px;">${topRoad ? topRoad[0] : '— none yet —'}</div></div>
+    <div class="digest-card" style="border-left-color:var(--gold);"><div class="digest-label">Your Points This Week</div><div class="digest-value">+${ptsThisWeek}</div></div>
+  `;
+}
+
+// ══════════════════════════════════════════════════════════
+// FEATURE 7 — OPEN DATA EXPORT
+// ══════════════════════════════════════════════════════════
+function buildOpenDataset() {
+  return contracts.map(c => ({
+    id: c.id, name: c.name, region: c.region, work_type: c.work_type,
+    contractor: c.contractor,
+    contractor_nationality: isGhanaian(c.contractor) === null ? '' : (isGhanaian(c.contractor) ? 'Ghanaian' : 'International'),
+    amount: c.amount, currency: c.currency, agency: c.agency, award_date: c.date,
+    source: c.source, flags: c.flags,
+  }));
+}
+function downloadJSON() {
+  const blob = new Blob([JSON.stringify(buildOpenDataset(), null, 2)], { type:'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'roadwatch-ghana-contracts.json';
+  a.click();
+  showToast('Downloaded JSON dataset');
+}
+function downloadCSV() {
+  const data = buildOpenDataset();
+  const cols = Object.keys(data[0]);
+  const esc = v => `"${String(v==null?'':v).replace(/"/g,'""')}"`;
+  const rows = [cols.join(',')].concat(data.map(r => cols.map(k => esc(r[k])).join(',')));
+  const blob = new Blob([rows.join('\n')], { type:'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'roadwatch-ghana-contracts.csv';
+  a.click();
+  showToast('Downloaded CSV dataset');
+}
+
+// ══════════════════════════════════════════════════════════
+// FEATURE 8 — CONTRACTOR DIRECTORY
+// ══════════════════════════════════════════════════════════
+function renderContractors(query) {
+  const grid = document.getElementById('contractorGrid');
+  if (!grid) return;
+  query = (query || '').toLowerCase();
+  const list = contractors
+    .filter(c => c.name.toLowerCase().includes(query))
+    .sort((a,b) => b.total_ghs - a.total_ghs);
+  grid.innerHTML = list.map((ct, i) => {
+    const regionsForContractor = [...new Set(contracts.filter(c => c.contractor === ct.name).map(c => c.region))];
+    const gh = isGhanaian(ct.name);
+    const badge = gh === null ? '' : gh ? '🇬🇭 Ghanaian firm' : '🌍 International firm';
+    return `<div class="contractor-card">
+      <div class="contractor-rank">#${i+1} by contract value</div>
+      <div class="contractor-name-c">${ct.name.replace('M/S ','').replace('MESSRS ','')}</div>
+      <div class="contractor-stat-row"><span>Contracts awarded</span><strong>${ct.count}</strong></div>
+      <div class="contractor-stat-row"><span>Total value</span><strong>GHS ${(ct.total_ghs/1e6).toFixed(1)}M</strong></div>
+      <div class="contractor-stat-row"><span>Regions</span><strong style="text-align:right;max-width:140px;">${regionsForContractor.join(', ') || '—'}</strong></div>
+      <div style="margin-top:8px;font-size:11px;font-weight:700;color:var(--green);">${badge}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════════
+// FEATURE 9 — ECOSYSTEM MODULE MODAL
+// ══════════════════════════════════════════════════════════
+const MODULE_INFO = {
+  schools:   { icon:'🏫', title:'Schools',   body:'Track new schools, classroom blocks, dormitories, libraries, and laboratories under construction across Ghana.' },
+  hospitals: { icon:'🏥', title:'Hospitals', body:'Track new hospitals, CHPS compounds, clinics, health centers, and regional hospitals.' },
+  water:     { icon:'💧', title:'Water Projects', body:'Track boreholes, water treatment plants, pipelines, and community water systems.' },
+  energy:    { icon:'⚡', title:'Energy',    body:'Track electricity extensions, solar projects, street lights, and rural electrification.' },
+  markets:   { icon:'🏛️', title:'Markets & Public Buildings', body:'Monitor markets, lorry stations, community centers, sports facilities, and government offices.' },
+};
+function showModuleModal(key) {
+  const m = MODULE_INFO[key];
+  document.getElementById('moduleModalTitle').textContent = `${m.icon} ${m.title} — Coming Soon`;
+  document.getElementById('moduleModalBody').innerHTML = `
+    <p style="font-size:14px;line-height:1.6;color:#333;">${m.body}</p>
+    <p style="font-size:13px;line-height:1.6;color:#333;margin-top:12px;">This module is part of the RoadWatch Ghana roadmap (Phase 5) and will launch once there is real, sourced project data for this sector — the same standard the Roads module already meets. No placeholder figures will be shown.</p>
+    <div style="background:#f0f8f4;border-radius:8px;padding:14px;margin-top:16px;font-size:12px;color:var(--green);font-weight:600;">Want to help bring verified ${m.title.toLowerCase()} data to RoadWatch Ghana? Reach out via the Contact Directory.</div>
+  `;
+  openModal('moduleModal');
+}
+
+// ══════════════════════════════════════════════════════════
+// FEATURE 10 — PHOTO ATTACHMENT + LIGHTBOX
+// ══════════════════════════════════════════════════════════
+let _pendingPhotoDataUrl = null;
+function handlePhotoSelect(evt) {
+  const file = evt.target.files[0];
+  if (!file) return;
+  if (!file.type.startsWith('image/')) { alert('Please choose an image file.'); return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const maxW = 480;
+      const scale = Math.min(1, maxW / img.width);
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      _pendingPhotoDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+      const preview = document.getElementById('commentPhotoPreview');
+      preview.src = _pendingPhotoDataUrl;
+      preview.style.display = 'inline-block';
+      document.getElementById('commentPhotoClear').style.display = 'inline';
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function clearPhotoSelect() {
+  _pendingPhotoDataUrl = null;
+  const input = document.getElementById('commentPhoto');
+  if (input) input.value = '';
+  const preview = document.getElementById('commentPhotoPreview');
+  if (preview) { preview.src = ''; preview.style.display = 'none'; }
+  const clearBtn = document.getElementById('commentPhotoClear');
+  if (clearBtn) clearBtn.style.display = 'none';
+}
+function openLightbox(src) {
+  document.getElementById('lightboxImg').src = src;
+  openModal('lightboxModal');
+}
+
+// ══════════════════════════════════════════════════════════
+// INIT — RoadWatch Ghana features
+// ══════════════════════════════════════════════════════════
+renderProfileWidget();
+renderAlerts();
+renderDigest();
+renderContractors('');
+document.getElementById('ddCountJson').textContent = contracts.length;
+document.getElementById('contractorSearch').addEventListener('input', e => renderContractors(e.target.value));
+
+window.showDisasterModal = showDisasterModal;
+window.selectDisasterType = selectDisasterType;
+window.submitDisaster = submitDisaster;
+window.showModuleModal = showModuleModal;
+window.saveProfileName = saveProfileName;
+window.handlePhotoSelect = handlePhotoSelect;
+window.clearPhotoSelect = clearPhotoSelect;
+window.openLightbox = openLightbox;
+window.downloadJSON = downloadJSON;
+window.downloadCSV = downloadCSV;
 </script>
 </body>
 </html>
