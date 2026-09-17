@@ -553,6 +553,72 @@ const contracts = [...RAW.contracts, ...MRH_EXTRA];
 const regions = RAW.regions;
 const contractors = RAW.contractors;
 
+// ══════════════════════════════════════════════════════════
+// PHASE 4 — OPTIONAL LIVE FIELD-VERIFICATION (BigPush Accountability API)
+// ══════════════════════════════════════════════════════════
+// This static RTI/procurement dataset (above) never changes. This block
+// only ADDS an optional overlay: if a BigPush Accountability API is
+// deployed and this page is pointed at it (via ?api=https://your-host),
+// roads that match by name get a small "field-verified" badge showing
+// the officer-logged status from that live system.
+//
+// If ?api= is not set, the request fails, times out, or the response
+// shape is unexpected, this block does nothing and the page behaves
+// exactly as it always has — nothing else on this page depends on it.
+const API_BASE = (new URLSearchParams(location.search).get('api') || '').replace(/\/$/, '');
+
+function normalizeRoadName(name) {
+  return (name || '').toUpperCase().replace(/[^A-Z0-9]+/g, ' ').trim();
+}
+
+const LIVE_STATUS_INFO = {
+  ON_SCHEDULE:            { label: 'Field-verified: on schedule', bg: '#d1fae5', fg: '#065f46' },
+  DELAYED:                { label: 'Field-verified: delayed',     bg: '#fef3c7', fg: '#92400e' },
+  WORK_STOPPED:           { label: 'Field-verified: work stopped', bg: '#fee2e2', fg: '#991b1b' },
+  NOT_RECENTLY_VERIFIED:  { label: 'Not recently verified',        bg: '#e5e7eb', fg: '#374151' },
+};
+
+function liveBadgeHtml(c) {
+  if (!c.liveProject || !c.liveProject.status) return '';
+  const info = LIVE_STATUS_INFO[c.liveProject.status];
+  if (!info) return '';
+  return `<span style="display:inline-block;background:${info.bg};color:${info.fg};font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;white-space:nowrap;" title="From the BigPush Accountability field dashboard">🔎 ${info.label}</span>`;
+}
+
+async function loadLiveVerification() {
+  if (!API_BASE) return;
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 6000);
+    const res = await fetch(`${API_BASE}/api/projects`, { signal: controller.signal });
+    clearTimeout(timeout);
+    if (!res.ok) return;
+    const projects = await res.json();
+    if (!Array.isArray(projects)) return;
+
+    const byName = {};
+    projects.forEach(p => {
+      const key = normalizeRoadName(p.name);
+      if (key) byName[key] = p;
+    });
+
+    let matched = 0;
+    contracts.forEach(c => {
+      const p = byName[normalizeRoadName(c.name)];
+      if (p) { c.liveProject = p; matched++; }
+    });
+
+    if (matched > 0 && typeof render === 'function') render();
+    if (matched > 0 && typeof renderCards === 'function') renderCards();
+  } catch (err) {
+    // Network error, timeout, or the API isn't deployed yet — silently
+    // keep showing the static dataset. This is expected until the
+    // accountability backend is live somewhere public.
+  }
+}
+
+loadLiveVerification();
+
 // At-a-glance counts (reframed)
 let dupCount=0, highValCount=0, multiCount=0, usdCount=0;
 // Track unique multi-lot road names
@@ -885,7 +951,7 @@ function render() {
       <td>${c.id}</td>
       <td>
         <div class="proj-name">${c.name}</div>
-        <div style="margin-top:3px;">${sourceBadge(c)}</div>
+        <div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap;align-items:center;">${sourceBadge(c)}${liveBadgeHtml(c)}</div>
         <div id="counts-${c.id}">${buildCountsHtml(getReports(c.id))}</div>
       </td>
       <td><span class="region-pill">${c.region||'—'}</span></td>
@@ -1032,7 +1098,7 @@ function renderCards() {
       <div>
         <div class="card-road-name">${c.name}</div>
         <div style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap;">
-          ${sourceBadge(c)}
+          ${sourceBadge(c)}${liveBadgeHtml(c)}
           <span class="region-pill">${c.region||'—'}</span>
           <span class="type-pill">${c.work_type||'—'}</span>
         </div>
